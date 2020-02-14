@@ -7,16 +7,15 @@ const basicCapabilities = {
   'os' : 'Windows',
   'os_version' : '10',
   'resolution' : '1024x768',
-  'browserstack.user' : 'bsuser62225',
-  'browserstack.key' : 'qbS59xyzU6RxuYjEMbJn',
   'name' : 'Alpeious Test',
   'acceptSslCerts' : 'true',
   'browserstack.debug' : 'true'
 }
 
 module.exports = {
-  async defineDriver (capabilities) {
+  async defineDriver (capabilities, creds) {
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
+    capabilitiesCurrent = Object.assign(capabilitiesCurrent, creds)
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)

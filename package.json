@@ -10,7 +10,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "jest --maxConcurrency=2",
-    "test-data": "jest tests/latin-male/latin-male-firefox.test.js --maxConcurrency=2"
+    "test-data": "jest tests/latin-simple-lookup.test.js"
   },
   "author": "",
   "license": "ISC",
