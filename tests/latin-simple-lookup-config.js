@@ -1,8 +1,10 @@
 module.exports = {
   testUrl: 'https://texts.alpheios.net',
   env: {
-    browserName: 'Firefox',
-    browserVersions: ['71.0']/*,
+    browserName: 'Chrome',
+    browserVersions: ['78.0'],
+    osVersions: [{ 'os' : 'Windows', 'osVersion' : '10' }]
+    /*,
     osVersions: [{ 'os' : 'Windows', 'osVersion' : '10' }, { 'os' : 'Windows', 'osVersion' : '8.1' }]*/
   },
   creds: {
@@ -10,8 +12,8 @@ module.exports = {
     'browserstack.key' : 'qbS59xyzU6RxuYjEMbJn'
   },
   lookupData: {
-    targetWord: 'male',
-    firstCheck: 'mala',
-    secondCheck: ['malus mali', 'mast; beam; tall pole, upright pole; standard, prop, staff;']
+    targetWord: 'beatum',
+    firstCheck: 'beatus , beata'/*,
+    secondCheck: ['beatus beata beatum', 'blessed, blissful; "Saint" (in early Church, less formal);']*/
   }
 }

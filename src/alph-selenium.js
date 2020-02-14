@@ -59,7 +59,16 @@ module.exports = {
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 
     checkText.forEach(text => {
-      expect(lexemeDataMorph_text.includes(text)).toBeTruthy()
+      let finalCheck = false
+
+      finalCheck = lexemeDataMorph_text.includes(text)
+      if (!finalCheck) {
+        text = text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
+        lexemeDataMorph_text = lexemeDataMorph_text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
+        finalCheck = lexemeDataMorph_text.includes(text)
+      }
+
+      expect(finalCheck).toBeTruthy()
     })
   },
 

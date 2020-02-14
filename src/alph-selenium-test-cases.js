@@ -28,7 +28,7 @@ module.exports = {
       if (lookupData.firstCheck) {
         await alph.checkLexemeData(driverChrome, 1, lookupData.firstCheck)
       }
-      if (lookupData.firstCheck) {
+      if (lookupData.secondCheck) {
         await alph.checkLexemeData(driverChrome, 2, lookupData.secondCheck)
       }
 
