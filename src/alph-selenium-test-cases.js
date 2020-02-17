@@ -5,11 +5,11 @@ function timeout (ms) {
 }
 
 module.exports = {
-  async simpleLatinLookupTest (version, url) {
-    const driverChrome = await alph.defineDriver(version)
+  async simpleLatinLookupTest (version, url, creds, lookupData) {
+    const driverChrome = await alph.defineDriver(version, creds)
     await timeout(6000)
 
-    alph.goToUrl(driverChrome, url) //'https://texts.alpheios.net')
+    alph.goToUrl(driverChrome, url)
     await timeout(6000)
 
     let loaded = true
@@ -21,14 +21,17 @@ module.exports = {
     }
 
     expect(loaded).toBeTruthy()
-    if (loaded) {
-      await alph.lookupLatinWord(driverChrome, 'male')
+    if (loaded && lookupData) {
+      await alph.lookupLatinWord(driverChrome, lookupData.targetWord)
       await timeout(6000)
-        
-      await alph.checkLexemeData(driverChrome, 1, 'mala')
-      await alph.checkLexemeData(driverChrome, 2, ['malus mali', 'mast; beam; tall pole, upright pole; standard, prop, staff;'])
-        
-      await timeout(6000)
+      
+      if (lookupData.firstCheck) {
+        await alph.checkLexemeData(driverChrome, 1, lookupData.firstCheck)
+      }
+      if (lookupData.secondCheck) {
+        await alph.checkLexemeData(driverChrome, 2, lookupData.secondCheck)
+      }
+
       await alph.checkHasInflectionsTab(driverChrome)
 
       await driverChrome.quit()
