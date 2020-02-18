@@ -4,13 +4,15 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "axios": "^0.19.2",
     "jest": "^25.1.0",
     "selenium-webdriver": "^4.0.0-alpha.5"
   },
   "devDependencies": {},
   "scripts": {
     "test": "jest",
-    "test-simple-lookup": "jest tests/latin-simple-lookup.test.js"
+    "test-simple-lookup": "jest tests/latin-simple-lookup.test.js --env=node",
+    "update-browsers": "node src/update-browser-list.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,15 +1,14 @@
 module.exports = {
   testUrl: 'https://texts.alpheios.net',
   env: {
-    browserName: 'Chrome',
-    browserVersions: ['78.0'],
-    osVersions: [{ 'os' : 'Windows', 'osVersion' : '10' }]
-    /*,
-    osVersions: [{ 'os' : 'Windows', 'osVersion' : '10' }, { 'os' : 'Windows', 'osVersion' : '8.1' }]*/
+    browserName: 'firefox',
+    // browserVersions: ['78.0'],
+    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
+    // osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }, { 'os' : 'Windows', 'os_version' : '8.1' }]
   },
   creds: {
     'browserstack.user' : 'bsuser62225',
-    'browserstack.key' : 'qbS59xyzU6RxuYjEMbJn'
+    'browserstack.key' : 'azupMxLR1XptWppiEpeD'
   },
   lookupData: {
     targetWord: 'beatum',
