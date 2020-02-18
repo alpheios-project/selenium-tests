@@ -1,9 +1,9 @@
 module.exports = {
   testUrl: 'https://texts.alpheios.net',
   env: {
-    browserName: 'safari'//,
-    // browserVersions: ['78.0'],
-    // osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
+    browserName: 'chrome',
+    browserVersions: ['78.0'],
+    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
     // osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }, { 'os' : 'Windows', 'os_version' : '8.1' }]
   },
   creds: {
@@ -11,8 +11,8 @@ module.exports = {
     'browserstack.key' : 'azupMxLR1XptWppiEpeD'
   },
   lookupData: {
-    targetWord: 'beatum',
-    firstCheck: 'beatus , beata'/*,
+    targetWord: 'ἀγαθός',
+    firstCheck: 'adjective 1st 2nd declension'/*,
     secondCheck: ['beatus beata beatum', 'blessed, blissful; "Saint" (in early Church, less formal);']*/
   }
 }

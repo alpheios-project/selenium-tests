@@ -13,6 +13,10 @@ const basicCapabilities = {
 }
 
 module.exports = {
+  timeout (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  },
+
   async defineDriver (capabilities, creds) {
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
     capabilitiesCurrent = Object.assign(capabilitiesCurrent, creds)
@@ -33,7 +37,23 @@ module.exports = {
     return toolbar
   },
 
-  async lookupLatinWord (driver, targetWord) {
+  async firstPageLoad (driver, url) {
+    await this.timeout(6000)
+
+    this.goToUrl(driver, url)
+    await this.timeout(6000)
+
+    let loaded = true
+    try {
+      await this.checkAlpehiosLoaded(driver)
+    } catch (err) {
+      loaded = false
+      await driver.quit()
+    }
+    return loaded
+  },
+
+  async activateLookup (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
   
     const lookupIconToolbar = await toolbar.findElement(By.className('alpheios-toolbar__lookup-control'))
@@ -42,10 +62,38 @@ module.exports = {
     const lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
 
     const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
-    await lookupInputToolbar.click()
-    await lookupInputToolbar.sendKeys(targetWord)
+
+    return { form: lookupFormToolbar, input: lookupInputToolbar }
+  },
+
+  async checkLanguageInLookup (driver, form, lang) {
+    const langHint = await form.findElement(By.className('alpheios-lookup__lang-hint'))
+    let langHint_text = await langHint.getText()
+    langHint_text = langHint_text.replace('(', '').replace(')', '')
+    return langHint_text === lang
+  },
+
+  async changeLookupLanguage (driver, form, lang) {
+    const langChangeLink = await form.findElement(By.className('alpheios-lookup__lang-change'))
+    langChangeLink.click()
+
+    const langChangeSelect = await form.findElement(By.className('alpheios-select alpheios-setting__control'))
+    langChangeSelect.click()
+    langChangeSelect.sendKeys(lang)
+    langChangeSelect.click()
+  },
+
+  async lookupWord (driver, targetWord, lang) {
+    const lookupBlock = await this.activateLookup(driver)
+
+    const resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+    if (!resLangCheck) {
+      await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+    }
+    await lookupBlock.input.click()
+    await lookupBlock.input.sendKeys(targetWord)
     
-    const lookupFormButtonToolbar = await lookupFormToolbar.findElement(By.tagName('button'))
+    const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.tagName('button'))
     await lookupFormButtonToolbar.click()
   },
 
@@ -59,16 +107,16 @@ module.exports = {
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 
     checkText.forEach(text => {
-      let finalCheck = false
+      let finalLexemeCheck = false
 
-      finalCheck = lexemeDataMorph_text.includes(text)
-      if (!finalCheck) {
+      finalLexemeCheck = lexemeDataMorph_text.includes(text)
+      if (!finalLexemeCheck) {
         text = text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
         lexemeDataMorph_text = lexemeDataMorph_text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
-        finalCheck = lexemeDataMorph_text.includes(text)
+        finalLexemeCheck = lexemeDataMorph_text.includes(text)
       }
 
-      expect(finalCheck).toBeTruthy()
+      expect(finalLexemeCheck).toBeTruthy()
     })
   },
 

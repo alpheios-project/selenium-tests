@@ -11,7 +11,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "jest",
-    "test-simple-lookup": "jest tests/latin-simple-lookup.test.js --env=node",
+    "test-latin-simple-lookup": "jest tests/latin-simple-lookup.test.js --env=node",
+    "test-greek-simple-lookup": "jest tests/greek-simple-lookup.test.js --env=node",
     "update-browsers": "node src/update-browser-list.js"
   },
   "author": "",
