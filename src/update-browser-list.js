@@ -33,7 +33,20 @@ const filterBrowsersData = (allVersions) => {
   return allVersions.filter(version => 
     osVersions.some(checkV => version.os === checkV.os && version['os_version'] === checkV['os_version']) && 
     browserVersions.some(checkV => version.browser === checkV.browser && parseInt(version['browser_version']) >= checkV['min_version'])
-  )
+  ).map(version => {
+    return {
+      'os': version.os,
+      'os_version': version['os_version'],
+      'browser': version.browser,
+      'browser_version': version['browser_version'],
+      'name': `${version.os} ${version['os_version']} - ${version.browser} ${version['browser_version']}`
+    }
+  }).sort((a,b) => {
+    if (a.browser === b.browser) {
+      return (a.browser_version - b.browser_version)
+    }
+    return a.browser - b.browser
+  })
 }
 
 const saveJSONToFile = (data) => {

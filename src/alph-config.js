@@ -25,16 +25,6 @@ module.exports = {
       }
       return result
     })
-    allVersions = allVersions.map(version => {
-      return {
-        'os': version.os,
-        'os_version': version['os_version'],
-        'browser': version.browser,
-        'browser_version': version['browser_version'],
-        'name': `${version.os} ${version['os_version']} - ${version.browser} ${version['browser_version']}`
-      }
-    }).sort((a,b) => (a.browser_version - b.browser_version))
-
     return allVersions
   }
 }
