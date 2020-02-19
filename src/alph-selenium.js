@@ -108,16 +108,22 @@ module.exports = {
     let lexemeDataMorph_text = await lexemeDataMorph.getText()
     lexemeDataMorph_text = lexemeDataMorph_text.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
 
+    let sourcePopupText = lexemeDataMorph_text
+    if (!sourcePopupText) {
+      const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
+      sourcePopupText = await popupContent.getText()
+    }
+
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 
     checkText.forEach(text => {
       let finalLexemeCheck = false
 
-      finalLexemeCheck = lexemeDataMorph_text.includes(text)
+      finalLexemeCheck = sourcePopupText.includes(text)
       if (!finalLexemeCheck) {
         text = text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
-        lexemeDataMorph_text = lexemeDataMorph_text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
-        finalLexemeCheck = lexemeDataMorph_text.includes(text)
+        sourcePopupText = sourcePopupText.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
+        finalLexemeCheck = sourcePopupText.includes(text)
       }
 
       expect(finalLexemeCheck).toBeTruthy()

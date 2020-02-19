@@ -9,7 +9,13 @@ describe('greek-simple-lookup.test.js', () => {
 
   versions.forEach(version => {
     it(`should execute simple (ara) lookup - ${version.name}`, async () => {
-      await alph_tests.simpleLookupTest(version, config.testUrl, config.lookupData, 'Arabic', false)
+      await alph_tests.simpleLookupTest({
+        version,
+        url: config.testUrl,
+        lookupData: config.lookupData,
+        lang: 'Arabic',
+        checkInflections: false
+      })
     }, 5000000)
   })
 

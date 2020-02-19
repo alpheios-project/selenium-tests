@@ -2,23 +2,23 @@ const alph = require('./alph-selenium')
 const config = require('./main-config.json')
 
 module.exports = {
-  async simpleLookupTest (version, url, lookupData, lang, checkInfl = true) {
-    const driver = await alph.defineDriver(version, config.auth)
-    const loaded = await alph.firstPageLoad(driver, url)
+  async simpleLookupTest (params) {
+    const driver = await alph.defineDriver(params.version, config.auth)
+    const loaded = await alph.firstPageLoad(driver, params.url)
 
     expect(loaded).toBeTruthy()
-    if (loaded && lookupData) {
-      await alph.lookupWord(driver, lookupData.targetWord, lang)
+    if (loaded && params.lookupData) {
+      await alph.lookupWord(driver, params.lookupData.targetWord, params.lang)
       await alph.timeout(6000)
       
-      if (lookupData.firstCheck) {
-        await alph.checkLexemeData(driver, 1, lookupData.firstCheck)
+      if (params.lookupData.firstCheck) {
+        await alph.checkLexemeData(driver, 1, params.lookupData.firstCheck)
       }
-      if (lookupData.secondCheck) {
-        await alph.checkLexemeData(driver, 2, lookupData.secondCheck)
+      if (params.lookupData.secondCheck) {
+        await alph.checkLexemeData(driver, 2, params.lookupData.secondCheck)
       }
 
-      if (checkInfl) {
+      if (params.checkInflections) {
         await alph.checkHasInflectionsTab(driver)
       }
 
