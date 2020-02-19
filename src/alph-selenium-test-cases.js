@@ -1,8 +1,9 @@
 const alph = require('./alph-selenium')
+const config = require('./main-config.json')
 
 module.exports = {
-  async simpleLookupTest (version, url, creds, lookupData, lang) {
-    const driver = await alph.defineDriver(version, creds)
+  async simpleLookupTest (version, url, lookupData, lang) {
+    const driver = await alph.defineDriver(version, config.auth)
     const loaded = await alph.firstPageLoad(driver, url)
 
     expect(loaded).toBeTruthy()

@@ -18,8 +18,12 @@ module.exports = {
   },
 
   async defineDriver (capabilities, creds) {
+
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
-    capabilitiesCurrent = Object.assign(capabilitiesCurrent, creds)
+    capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
+      'browserstack.user': creds.username,
+      'browserstack.key': creds.password
+    })
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)

@@ -1,4 +1,6 @@
 const axios = require('axios')
+const config = require('./main-config.json')
+
 const osVersions = [
   { 'os' : 'Windows', 'os_version' : '10' },
   { 'os' : 'Windows', 'os_version' : '8.1' },
@@ -19,10 +21,7 @@ const uploadBrowsersData = async () => {
     method: 'GET',
     url: 'https://api.browserstack.com/automate/browsers.json',
     withCredentials: true,
-    auth: {
-      username: 'bsuser62225',
-      password: 'azupMxLR1XptWppiEpeD'
-    },
+    auth: config.auth,
     responseType: 'json',
     responseEncoding: 'utf8'
   })
