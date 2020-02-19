@@ -1,6 +1,11 @@
 module.exports = {
   versions (env) { 
     let allVersions = require('./browsers-list.json')
+    let minBrowserVersion
+    
+    if (env.minBrowserVersion) {
+      minBrowserVersion = parseInt(env.minBrowserVersion)
+    }
 
     allVersions = allVersions.filter(version => {
       let result = true
@@ -9,7 +14,9 @@ module.exports = {
         result = result && version.browser === env.browserName
       }
 
-      if (env.browserVersions) {
+      if (minBrowserVersion) {
+        result = result && parseInt(version['browser_version']) >= minBrowserVersion
+      } else if (env.browserVersions) {
         result = result && env.browserVersions.includes(version['browser_version'])
       }
 
@@ -27,6 +34,7 @@ module.exports = {
         'name': `${version.os} ${version['os_version']} - ${version.browser} ${version['browser_version']}`
       }
     }).sort((a,b) => (a.browser_version - b.browser_version))
+
     return allVersions
   }
 }
