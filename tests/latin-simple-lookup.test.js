@@ -10,7 +10,6 @@ describe('latin-simple-lookup.test.js', () => {
   versions.forEach(version => {
     it(`should execute simple (latin) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest(version, config.testUrl, config.creds, config.lookupData, 'Latin')
-      // console.info(`successfull ${version.name}`)
     }, 5000000)
   })
 })

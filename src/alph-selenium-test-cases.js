@@ -2,7 +2,7 @@ const alph = require('./alph-selenium')
 const config = require('./main-config.json')
 
 module.exports = {
-  async simpleLookupTest (version, url, lookupData, lang) {
+  async simpleLookupTest (version, url, lookupData, lang, checkInfl = true) {
     const driver = await alph.defineDriver(version, config.auth)
     const loaded = await alph.firstPageLoad(driver, url)
 
@@ -18,7 +18,9 @@ module.exports = {
         await alph.checkLexemeData(driver, 2, lookupData.secondCheck)
       }
 
-      await alph.checkHasInflectionsTab(driver)
+      if (checkInfl) {
+        await alph.checkHasInflectionsTab(driver)
+      }
 
       await driver.quit()
     }

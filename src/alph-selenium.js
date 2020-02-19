@@ -126,14 +126,33 @@ module.exports = {
 
   async checkHasInflectionsTab (driver) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
-    const popupToolbarInflButton = await popup.findElement(By.css('.alpheios-popup__toolbar-buttons > div:nth-child(2)'))  
-    await popupToolbarInflButton.click()
-      
-    const panel = await driver.findElement(By.id('alpheios-panel__inflections-panel'))
-    const panelTitle = await panel.findElement(By.css('h1.alpheios-panel__title'))
-  
-    let panelTitle_text = await panelTitle.getText()
-    panelTitle_text = panelTitle_text.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
-    expect(panelTitle_text.toLowerCase()).toEqual('inflection tables')
+   
+    let loaded = true
+    try {
+      await this.checkAlpehiosLoaded(driver)
+    } catch (err) {
+      loaded = false
+      await driver.quit()
+    }
+
+    let loadedInflButton = true
+    try {
+      const popupToolbarInflButton = await popup.findElement(By.css('.alpheios-popup__toolbar-buttons > div:nth-child(2)'))
+      await popupToolbarInflButton.click()
+    } catch (err) {
+      loadedInflButton = false
+      await driver.quit()
+    }
+    
+    expect(loadedInflButton).toBeTruthy()
+
+    if (loadedInflButton) {
+      const panel = await driver.findElement(By.id('alpheios-panel__inflections-panel'))
+      const panelTitle = await panel.findElement(By.css('h1.alpheios-panel__title'))
+    
+      let panelTitle_text = await panelTitle.getText()
+      panelTitle_text = panelTitle_text.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+      expect(panelTitle_text.toLowerCase()).toEqual('inflection tables')
+    }
   }
 }

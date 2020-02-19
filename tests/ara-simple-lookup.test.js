@@ -1,6 +1,6 @@
   
 describe('greek-simple-lookup.test.js', () => {
-  const config = require('./greek-simple-lookup-config.js') 
+  const config = require('./ara-simple-lookup-config.js') 
   const alph_tests = require('../src/alph-selenium-test-cases')
   const versions = require('../src/alph-config').versions(config.env)
 
@@ -8,9 +8,10 @@ describe('greek-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versions.forEach(version => {
-    it(`should execute simple (greek) lookup - ${version.name}`, async () => {
-      await alph_tests.simpleLookupTest(version, config.testUrl, config.lookupData, 'Greek')
+    it(`should execute simple (ara) lookup - ${version.name}`, async () => {
+      await alph_tests.simpleLookupTest(version, config.testUrl, config.lookupData, 'Arabic', false)
     }, 5000000)
   })
+
 })
   
