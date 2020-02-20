@@ -1,5 +1,5 @@
   
-describe('greek-simple-lookup.test.js', () => {
+describe('ara-simple-lookup.test.js', () => {
   const config = require('./ara-simple-lookup-config.js') 
   const alph_tests = require('../src/alph-selenium-test-cases')
   const versions = require('../src/alph-config').versions(config.env)
@@ -16,7 +16,7 @@ describe('greek-simple-lookup.test.js', () => {
         lang: 'Arabic',
         checkInflections: false
       })
-    }, 5000000)
+    }, 50000000)
   })
 
 })

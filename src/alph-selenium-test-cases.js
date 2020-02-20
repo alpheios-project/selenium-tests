@@ -3,13 +3,12 @@ const config = require('./main-config.json')
 
 module.exports = {
   async simpleLookupTest (params) {
-    const driver = await alph.defineDriver(params.version, config.auth)
+    const driver = await alph.defineDriver(params.version, config.auth, params.version.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
-
+    
     expect(loaded).toBeTruthy()
     if (loaded && params.lookupData) {
       await alph.lookupWord(driver, params.lookupData.targetWord, params.lang)
-      await alph.timeout(6000)
       
       if (params.lookupData.firstCheck) {
         await alph.checkLexemeData(driver, 1, params.lookupData.firstCheck)
@@ -24,6 +23,7 @@ module.exports = {
 
       await driver.quit()
     }
+
   }
 
 }

@@ -12,12 +12,14 @@ const basicCapabilities = {
   'browserstack.debug' : 'true'
 }
 
+let timeoutG = require('./main-config.json').timeout
+
 module.exports = {
   timeout (ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   },
 
-  async defineDriver (capabilities, creds) {
+  async defineDriver (capabilities, creds, timeout) {
 
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
     capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
@@ -29,6 +31,8 @@ module.exports = {
       .withCapabilities(capabilitiesCurrent)
       .build()
     driver.manage().window().maximize()
+
+    timeoutG = timeout
     return driver
   },
 
@@ -42,10 +46,10 @@ module.exports = {
   },
 
   async firstPageLoad (driver, url) {
-    await this.timeout(6000)
+    await this.timeout(timeoutG)
 
     this.goToUrl(driver, url)
-    await this.timeout(6000)
+    await this.timeout(timeoutG)
 
     let loaded = true
     try {
@@ -82,37 +86,68 @@ module.exports = {
     langChangeLink.click()
 
     const langChangeSelect = await form.findElement(By.className('alpheios-select alpheios-setting__control'))
-    langChangeSelect.click()
-    langChangeSelect.sendKeys(lang)
-    langChangeSelect.click()
+    const result = await this.changeSelectedOption(driver, langChangeSelect, lang)
+    return result
+  },
+
+  async changeSelectedOption (driver, selectElement, optionValue) {
+    let testText = await selectElement.getText()
+    await selectElement.click()
+    await this.timeout(timeoutG)
+
+    const options = await selectElement.findElements(By.tagName('option'))
+    let desiredOption
+
+    for(let i = 0; i < options.length; i++) {
+      const option_text = await options[i].getText()
+      if (option_text === optionValue) {
+        desiredOption = options[i]
+        break
+      }
+    }
+
+    if (desiredOption) {
+      testText = await desiredOption.getText()
+      console.info('desiredOption text - ', testText)
+      await desiredOption.click()
+      return true
+    }
+
+    return false
   },
 
   async lookupWord (driver, targetWord, lang) {
     const lookupBlock = await this.activateLookup(driver)
 
-    const resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+    let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+    let resChangeLang = true
     if (!resLangCheck) {
-      await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+      resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
     }
-    await lookupBlock.input.click()
-    await lookupBlock.input.sendKeys(targetWord)
-    
-    const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.tagName('button'))
-    await lookupFormButtonToolbar.click()
+
+    expect(resChangeLang).toBeTruthy()
+
+    if (resChangeLang) {
+      await this.timeout(timeoutG)
+
+      await lookupBlock.input.click()
+      await lookupBlock.input.sendKeys(targetWord)
+      
+      const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.tagName('button'))
+      await lookupFormButtonToolbar.click()
+    }
   },
 
   async checkLexemeData (driver, num, checkText) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
     const morphPopup = await popup.findElement(By.id('alpheios-lexical-data-container'))
-    const lexemeDataMorph = await morphPopup.findElement(By.css(`#alpheios-morph-component > div:nth-child(${num}) .alpheios-morph__dictentry`))  
-    let lexemeDataMorph_text = await lexemeDataMorph.getText()
-    lexemeDataMorph_text = lexemeDataMorph_text.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+    const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
+    let sourcePopupText = await popupContent.getText()
+    sourcePopupText = sourcePopupText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
 
-    let sourcePopupText = lexemeDataMorph_text
-    if (!sourcePopupText) {
-      const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
-      sourcePopupText = await popupContent.getText()
-    }
+    console.info('sourcePopupText', sourcePopupText)
+
+    console.info('checkText', checkText)
 
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 
@@ -133,14 +168,6 @@ module.exports = {
   async checkHasInflectionsTab (driver) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
    
-    let loaded = true
-    try {
-      await this.checkAlpehiosLoaded(driver)
-    } catch (err) {
-      loaded = false
-      await driver.quit()
-    }
-
     let loadedInflButton = true
     try {
       const popupToolbarInflButton = await popup.findElement(By.css('.alpheios-popup__toolbar-buttons > div:nth-child(2)'))

@@ -1,30 +1,49 @@
+const config = require('./main-config.json')
+
 module.exports = {
   versions (env) { 
-    let allVersions = require('./browsers-list.json')
-    let minBrowserVersion
-    
-    if (env.minBrowserVersion) {
-      minBrowserVersion = parseInt(env.minBrowserVersion)
+    if (!env) {
+      env = config.env
     }
 
-    allVersions = allVersions.filter(version => {
-      let result = true
+    let allVersions = require('./browsers-list.json')
 
-      if (env.browserName) {
-        result = result && version.browser === env.browserName
-      }
+    let finalVersions = []
+    if (!Array.isArray(env)) { env = [env]}
 
-      if (minBrowserVersion) {
-        result = result && parseInt(version['browser_version']) >= minBrowserVersion
-      } else if (env.browserVersions) {
-        result = result && env.browserVersions.includes(version['browser_version'])
+    env.forEach(envItem => {
+      let minBrowserVersion
+      
+      if (envItem.minBrowserVersion) {
+        minBrowserVersion = parseInt(envItem.minBrowserVersion)
       }
+      
+      const localVersions = allVersions.filter(version => {
+        let result = true
+  
+        if (envItem.browserName) {
+          result = result && version.browser === envItem.browserName
+        }
+  
+        if (minBrowserVersion) {
+          result = result && parseInt(version['browser_version']) >= minBrowserVersion
+        } else if (envItem.browserVersions) {
+          result = result && envItem.browserVersions.includes(version['browser_version'])
+        }
+  
+        if (envItem.osVersions) {
+          result = result && envItem.osVersions.some(envOsVer => envOsVer.os === version.os && envOsVer['os_version'] === version['os_version'])
+        }
+        return result
+      })
 
-      if (env.osVersions) {
-        result = result && env.osVersions.some(envOsVer => envOsVer.os === version.os && envOsVer['os_version'] === version['os_version'])
-      }
-      return result
+      const timeout = envItem.timeout ? envItem.timeout : config.timeout
+      localVersions.forEach(version => { version.timeout = timeout })
+
+      finalVersions = finalVersions.concat(localVersions)
     })
-    return allVersions
+
+    
+    return finalVersions
   }
 }

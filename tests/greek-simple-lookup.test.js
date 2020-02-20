@@ -7,6 +7,8 @@ describe('greek-simple-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
+  console.info(versions)
+  
   versions.forEach(version => {
     it(`should execute simple (greek) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
@@ -16,7 +18,8 @@ describe('greek-simple-lookup.test.js', () => {
         lang: 'Greek',
         checkInflections: true
       })
-    }, 5000000)
+    }, 50000000)
   })
+  
 })
   
