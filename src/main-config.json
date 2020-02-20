@@ -1,0 +1,22 @@
+{
+  "auth": {
+    "username": "bsuser62225",
+    "password": "azupMxLR1XptWppiEpeD"
+  },
+  "env": [
+    {
+      "browserName": "chrome",
+      "minBrowserVersion": "76"
+    },
+    {
+      "browserName": "safari",
+      "minBrowserVersion": "11",
+      "timeout": 10000
+    },
+    {
+      "browserName": "firefox",
+      "minBrowserVersion": "70"
+    }
+   ],
+  "timeout": 6000
+}

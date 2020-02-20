@@ -1,6 +1,6 @@
   
-describe('latin-simple-lookup.test.js', () => {
-  const config = require('./latin-simple-lookup-config.js') 
+describe('ara-simple-lookup.test.js', () => {
+  const config = require('./ara-simple-lookup-config.js') 
   const alph_tests = require('../src/alph-selenium-test-cases')
   const versions = require('../src/alph-config').versions(config.env)
 
@@ -8,14 +8,16 @@ describe('latin-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versions.forEach(version => {
-    it(`should execute simple (latin) lookup - ${version.name}`, async () => {
+    it(`should execute simple (ara) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         version,
         url: config.testUrl,
         lookupData: config.lookupData,
-        lang: 'Latin',
-        checkInflections: true
+        lang: 'Arabic',
+        checkInflections: false
       })
-    }, 5000000)
+    }, 50000000)
   })
+
 })
+  

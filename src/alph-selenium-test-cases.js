@@ -1,40 +1,29 @@
 const alph = require('./alph-selenium')
-
-function timeout (ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+const config = require('./main-config.json')
 
 module.exports = {
-  async simpleLatinLookupTest (version, url, creds, lookupData) {
-    const driverChrome = await alph.defineDriver(version, creds)
-    await timeout(6000)
-
-    alph.goToUrl(driverChrome, url)
-    await timeout(6000)
-
-    let loaded = true
-    try {
-      await alph.checkAlpehiosLoaded(driverChrome)
-    } catch (err) {
-      loaded = false
-      await driverChrome.quit()
-    }
-
+  async simpleLookupTest (params) {
+    const driver = await alph.defineDriver(params.version, config.auth, params.version.timeout)
+    const loaded = await alph.firstPageLoad(driver, params.url)
+    
     expect(loaded).toBeTruthy()
-    if (loaded && lookupData) {
-      await alph.lookupLatinWord(driverChrome, lookupData.targetWord)
-      await timeout(6000)
+    if (loaded && params.lookupData) {
+      await alph.lookupWord(driver, params.lookupData.targetWord, params.lang)
       
-      if (lookupData.firstCheck) {
-        await alph.checkLexemeData(driverChrome, 1, lookupData.firstCheck)
+      if (params.lookupData.firstCheck) {
+        await alph.checkLexemeData(driver, 1, params.lookupData.firstCheck)
       }
-      if (lookupData.secondCheck) {
-        await alph.checkLexemeData(driverChrome, 2, lookupData.secondCheck)
+      if (params.lookupData.secondCheck) {
+        await alph.checkLexemeData(driver, 2, params.lookupData.secondCheck)
       }
 
-      await alph.checkHasInflectionsTab(driverChrome)
+      if (params.checkInflections) {
+        await alph.checkHasInflectionsTab(driver)
+      }
 
-      await driverChrome.quit()
+      await driver.quit()
     }
+
   }
+
 }
