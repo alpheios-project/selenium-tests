@@ -108,7 +108,6 @@ module.exports = {
 
     if (desiredOption) {
       testText = await desiredOption.getText()
-      console.info('desiredOption text - ', testText)
       await desiredOption.click()
       return true
     }
@@ -144,10 +143,6 @@ module.exports = {
     const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
     let sourcePopupText = await popupContent.getText()
     sourcePopupText = sourcePopupText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
-
-    console.info('sourcePopupText', sourcePopupText)
-
-    console.info('checkText', checkText)
 
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 

@@ -6,8 +6,6 @@ describe('greek-simple-lookup.test.js', () => {
 
   beforeEach(() => {})
   afterEach(() => {})
-
-  console.info(versions)
   
   versions.forEach(version => {
     it(`should execute simple (greek) lookup - ${version.name}`, async () => {
