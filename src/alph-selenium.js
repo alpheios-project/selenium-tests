@@ -156,6 +156,9 @@ module.exports = {
         finalLexemeCheck = sourcePopupText.includes(text)
       }
 
+      if (!finalLexemeCheck) {
+        console.info(`Check text - "${text}", was not found in the source - ${sourcePopupText}`)
+      }
       expect(finalLexemeCheck).toBeTruthy()
     })
   },
