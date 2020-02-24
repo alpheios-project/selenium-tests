@@ -15,7 +15,10 @@
     "test-greek-simple-lookup": "jest tests/greek-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-ara-simple-lookup": "jest tests/ara-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-per-simple-lookup": "jest tests/per-simple-lookup.test.js --env=node --maxConcurrency=2",
+    "test-gez-simple-lookup": "jest tests/gez-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-latin-no-result-lookup": "jest tests/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
+    "test-latin-dblclick-lookup": "jest tests/latin-dblclick-lookup.test.js --env=node --maxConcurrency=2",
+    
     "update-browsers": "node src/update-browser-list.js"
   },
   "author": "",

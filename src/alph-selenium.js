@@ -137,12 +137,36 @@ module.exports = {
     }
   },
 
+  async dblclickLookupWord (driver, lookupData, lang) {
+    const actions = driver.actions({async: true})
+    // const mouse = actions.mouse()
+    // console.info(actions)
+    const textContainer = await driver.findElement(By.id('reading-container'))
+    const textPartForLookup = await textContainer.findElement(By.className(lookupData.clickClass))
+    // const textPartForLookup_text = await textPartForLookup.getText()
+    // console.info(textPartForLookup_text)
+    // textPartForLookup.dblclick()
+
+    const textPartForLookup_rect = await textPartForLookup.getRect()
+    console.info(textPartForLookup_rect)
+    // await actions.doubleClick(textPartForLookup).perform()
+    await actions.move({
+      origin: textPartForLookup,
+      x: textPartForLookup_rect.width * 0.1, y: textPartForLookup_rect.height/2
+    }).doubleClick()
+    await this.timeout(timeoutG)
+  },
+
   async checkLexemeData (driver, num, checkText) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
     const morphPopup = await popup.findElement(By.id('alpheios-lexical-data-container'))
     const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
     let sourcePopupText = await popupContent.getText()
     sourcePopupText = sourcePopupText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+
+    const popupSelection = await popup.findElement(By.className('alpheios-popup__toolbar-selection'))
+    let popupSelection_text = await popupSelection.getText()
+    console.info('popupSelection_text - ', popupSelection_text)
 
     if (!Array.isArray(checkText)) { checkText = [checkText] }
 
