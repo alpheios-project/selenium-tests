@@ -1,8 +1,8 @@
   
 describe('gez-simple-lookup.test.js', () => {
-  const config = require('./gez-simple-lookup-config.js') 
-  const alph_tests = require('../src/alph-selenium-test-cases')
-  const versions = require('../src/alph-config').versions(config.env)
+  const config = require('./config/gez-simple-lookup-config.js') 
+  const alph_tests = require('../../src/alph-selenium-test-cases')
+  const versions = require('../../src/alph-config').versions(config.env)
 
   beforeEach(() => {})
   afterEach(() => {})

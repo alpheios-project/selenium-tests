@@ -63,13 +63,65 @@ module.exports = {
 
   async activateLookup (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
-  
+    let lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
+
     const lookupIconToolbar = await toolbar.findElement(By.className('alpheios-toolbar__lookup-control'))
     await lookupIconToolbar.click()
-
-    const lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
-
+    
+    lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
     const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
+
+    return { form: lookupFormToolbar, input: lookupInputToolbar }
+  },
+
+  currentDate () {
+    let dt = new Date()
+    return dt.getFullYear() + '-'
+        + ((dt.getMonth()+1) < 10 ? '0' : '') + (dt.getMonth()+1)  + '-'
+        + ((dt.getDate() < 10) ? '0' : '') + dt.getDate() + '@'
+                + ((dt.getHours() < 10) ? '0' : '') + dt.getHours() + "-"
+                + ((dt.getMinutes() < 10) ? '0' : '') + dt.getMinutes() + "-"
+                + ((dt.getSeconds() < 10) ? '0' : '') + dt.getSeconds()
+  
+  },
+
+  async takeTestScreenshot (driver) {
+    const fs = require('fs')
+    const img = await driver.takeScreenshot()
+    const newDate = new Date()
+
+    const imgFileName = `tests/browserstack/screens/screenshot-${this.currentDate()}.png`
+    fs.writeFile(imgFileName, img, 'base64', (err) => { 
+      console.error(err)
+      console.info('Finished') 
+    })
+  },
+
+  async checkAndClosePanel (driver) {
+    const panel = await driver.findElement(By.id('alpheios-panel-inner'))
+    const displayedPanel = await panel.isDisplayed() 
+
+    if (displayedPanel) {
+      const panelHeader = await panel.findElement(By.className('alpheios-panel__header'))
+      const panelCloseButton = await panelHeader.findElement(By.className('alpheios-panel__close-btn'))
+
+      await panelCloseButton.click()
+    }
+  },
+
+  async getLookupBlock (driver) {
+    const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
+    let lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
+
+    let checkDisplayed = await lookupInputToolbar.isDisplayed()
+    if (!checkDisplayed) {
+      await this.checkAndClosePanel(driver)
+    }
+    checkDisplayed = await lookupInputToolbar.isDisplayed()
+    if (!checkDisplayed) {
+      await this.takeTestScreenshot(driver)
+    }
 
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
@@ -83,15 +135,18 @@ module.exports = {
 
   async changeLookupLanguage (driver, form, lang) {
     const langChangeLink = await form.findElement(By.className('alpheios-lookup__lang-change'))
-    langChangeLink.click()
 
-    const langChangeSelect = await form.findElement(By.className('alpheios-select alpheios-setting__control'))
-    const result = await this.changeSelectedOption(driver, langChangeSelect, lang)
-    return result
+    if (langChangeLink.isDisplayed()) {
+      langChangeLink.click()
+      const langChangeSelect = await form.findElement(By.className('alpheios-select alpheios-setting__control'))
+      const result = await this.changeSelectedOption(driver, langChangeSelect, lang)
+      return result
+    }
+
+    return true
   },
 
   async changeSelectedOption (driver, selectElement, optionValue) {
-    let testText = await selectElement.getText()
     await selectElement.click()
     await this.timeout(timeoutG)
 
@@ -115,76 +170,97 @@ module.exports = {
     return false
   },
 
-  async lookupWord (driver, targetWord, lang) {
-    const lookupBlock = await this.activateLookup(driver)
-
-    let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+  async lookupWord (driver, clickData, lang, needActivation = true) {
     let resChangeLang = true
-    if (!resLangCheck) {
-      resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
-    }
+    let lookupBlock
 
-    expect(resChangeLang).toBeTruthy()
+    if (needActivation) {
+      lookupBlock = await this.activateLookup(driver)
+
+      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)  
+      if (!resLangCheck) {
+        resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+      }
+
+      expect(resChangeLang).toBeTruthy()
+    } else {
+      lookupBlock = await this.getLookupBlock(driver)
+    }
 
     if (resChangeLang) {
       await this.timeout(timeoutG)
 
       await lookupBlock.input.click()
-      await lookupBlock.input.sendKeys(targetWord)
+      await lookupBlock.input.sendKeys(clickData.word)
       
       const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.tagName('button'))
       await lookupFormButtonToolbar.click()
     }
   },
 
-  async dblclickLookupWord (driver, lookupData, lang) {
+  async dblclickLookupWord (driver, clickData, lang) {
     const actions = driver.actions({async: true})
-    // const mouse = actions.mouse()
-    // console.info(actions)
-    const textContainer = await driver.findElement(By.id('reading-container'))
-    const textPartForLookup = await textContainer.findElement(By.className(lookupData.clickClass))
-    // const textPartForLookup_text = await textPartForLookup.getText()
-    // console.info(textPartForLookup_text)
-    // textPartForLookup.dblclick()
 
-    const textPartForLookup_rect = await textPartForLookup.getRect()
-    console.info(textPartForLookup_rect)
-    // await actions.doubleClick(textPartForLookup).perform()
-    await actions.move({
-      origin: textPartForLookup,
-      x: textPartForLookup_rect.width * 0.1, y: textPartForLookup_rect.height/2
-    }).doubleClick()
+    const textContainer = await driver.findElement(By.id('reading-container'))
+    const textPartForLookup = await textContainer.findElements(By.className(clickData.class))
+
+    const num = clickData.num - 1
+    const checkText = await textPartForLookup[num].getText()
+    console.info('checkText - ', checkText)
+    
+    actions.move({
+      origin: textPartForLookup[num],
+      x: clickData.x, y: clickData.y
+    })
+    await actions.doubleClick().perform()
     await this.timeout(timeoutG)
   },
 
-  async checkLexemeData (driver, num, checkText) {
+  async checkLexemeData (driver, checkData) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
-    const morphPopup = await popup.findElement(By.id('alpheios-lexical-data-container'))
     const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
     let sourcePopupText = await popupContent.getText()
     sourcePopupText = sourcePopupText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
 
     const popupSelection = await popup.findElement(By.className('alpheios-popup__toolbar-selection'))
     let popupSelection_text = await popupSelection.getText()
-    console.info('popupSelection_text - ', popupSelection_text)
 
-    if (!Array.isArray(checkText)) { checkText = [checkText] }
+    if (checkData.targetWord) {
+      expect(popupSelection_text).toEqual(checkData.targetWord)
+    }
 
-    checkText.forEach(text => {
-      let finalLexemeCheck = false
+    if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
 
-      finalLexemeCheck = sourcePopupText.includes(text)
-      if (!finalLexemeCheck) {
-        text = text.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
-        sourcePopupText = sourcePopupText.replace(',', ' ').replace(/\s{2,}/g, ' ').trim()
-        finalLexemeCheck = sourcePopupText.includes(text)
+    checkData.text.forEach(text => {
+      const result = this.checkTextFromPopup(sourcePopupText, text)
+
+      if (!result.finalLexemeCheck) {
+        console.info(`Check text - "${result.text}", was not found in the source - "${result.sourcePopupText}"`)
+      } else {
+        console.info(`Check text - "${result.text}", was found in the source`)
       }
-
-      if (!finalLexemeCheck) {
-        console.info(`Check text - "${text}", was not found in the source - ${sourcePopupText}`)
-      }
-      expect(finalLexemeCheck).toBeTruthy()
+      expect(result.finalLexemeCheck).toBeTruthy()
     })
+  },
+
+  checkTextFromPopup (sourcePopupText, text) {
+    let finalLexemeCheck = false
+
+    finalLexemeCheck = sourcePopupText.includes(text)
+    if (!finalLexemeCheck) {
+      let removePunctuation = [',', ';']
+
+      for (let i=0; i<removePunctuation.length; i++) {
+        text = text.replace(removePunctuation[i], ' ').replace(/\s{2,}/g, ' ').trim()
+        sourcePopupText = sourcePopupText.replace(removePunctuation[i], ' ').replace(/\s{2,}/g, ' ').trim()
+        finalLexemeCheck = sourcePopupText.includes(text)
+
+        if (finalLexemeCheck) {
+          break
+        }
+      }      
+    }
+    return { finalLexemeCheck, sourcePopupText, text }
   },
 
   async checkHasInflectionsTab (driver) {

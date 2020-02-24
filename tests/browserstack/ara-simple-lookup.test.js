@@ -1,8 +1,8 @@
   
 describe('ara-simple-lookup.test.js', () => {
-  const config = require('./ara-simple-lookup-config.js') 
-  const alph_tests = require('../src/alph-selenium-test-cases')
-  const versions = require('../src/alph-config').versions(config.env)
+  const config = require('./config/ara-simple-lookup-config.js') 
+  const alph_tests = require('../../src/alph-selenium-test-cases')
+  const versions = require('../../src/alph-config').versions(config.env)
 
   beforeEach(() => {})
   afterEach(() => {})
