@@ -6,10 +6,16 @@ const basicCapabilities = {
   'browser_version' : '79.0',
   'os' : 'Windows',
   'os_version' : '10',
-  'resolution' : '1024x768',
+  'resolution' : '1280x1024',
   'name' : 'Alpeious Test',
   'acceptSslCerts' : 'true',
-  'browserstack.debug' : 'true'
+  'browserstack.debug' : 'true',
+  'projectName': 'Alpheios Testing',
+  'buildName': 'Double click test',
+  'video': false/*,
+  chromeOptions: {
+    args: ['--auto-open-devtools-for-tabs']
+  }*/
 }
 
 let timeoutG = require('./main-config.json').timeout
@@ -41,15 +47,18 @@ module.exports = {
   },
 
   async checkAlpehiosLoaded (driver) {
+    await this.timeout(timeoutG)
+
+    // driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 10)
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
     return toolbar
   },
 
   async firstPageLoad (driver, url) {
-    await this.timeout(timeoutG)
+    // await this.timeout(timeoutG)
 
     this.goToUrl(driver, url)
-    await this.timeout(timeoutG)
+    // await this.timeout(timeoutG * 3)
 
     let loaded = true
     try {
@@ -58,6 +67,8 @@ module.exports = {
       loaded = false
       await driver.quit()
     }
+
+    // await this.takeTestScreenshot(driver)
     return loaded
   },
 
@@ -85,15 +96,14 @@ module.exports = {
   
   },
 
-  async takeTestScreenshot (driver) {
+  async takeTestScreenshot (driver, prev = '') {
     const fs = require('fs')
     const img = await driver.takeScreenshot()
     const newDate = new Date()
 
-    const imgFileName = `tests/browserstack/screens/screenshot-${this.currentDate()}.png`
+    const imgFileName = `tests/browserstack/screens/${prev}-screenshot-${this.currentDate()}.png`
     fs.writeFile(imgFileName, img, 'base64', (err) => { 
-      console.error(err)
-      console.info('Finished') 
+      if (err) { console.error(err) } else { console.info('Finished') }
     })
   },
 
@@ -108,6 +118,19 @@ module.exports = {
       await panelCloseButton.click()
     }
   },
+
+  async checkAndClosePopup (driver) {
+    const popup = await driver.findElement(By.id('alpheios-popup-inner'))
+    const displayedPopup = await popup.isDisplayed() 
+
+    if (displayedPopup) {
+      const popupHeader = await popup.findElement(By.className('alpheios-popup__header'))
+      const popupCloseButton = await popupHeader.findElement(By.className('alpheios-popup__close-btn'))
+
+      await popupCloseButton.click()
+    }
+  },
+  
 
   async getLookupBlock (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
@@ -199,21 +222,18 @@ module.exports = {
   },
 
   async dblclickLookupWord (driver, clickData, lang) {
-    const actions = driver.actions({async: true})
+    const textPartForLookup = await driver.findElements(By.css(clickData.path))
 
-    const textContainer = await driver.findElement(By.id('reading-container'))
-    const textPartForLookup = await textContainer.findElements(By.className(clickData.class))
-
-    const num = clickData.num - 1
+    const num = clickData.num ? clickData.num - 1 : 0
     const checkText = await textPartForLookup[num].getText()
     console.info('checkText - ', checkText)
     
-    actions.move({
-      origin: textPartForLookup[num],
-      x: clickData.x, y: clickData.y
-    })
-    await actions.doubleClick().perform()
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
+    
+    await textPartForLookup[num].click()
     await this.timeout(timeoutG)
+    // await this.takeTestScreenshot(driver, '1-')
   },
 
   async checkLexemeData (driver, checkData) {
@@ -224,23 +244,33 @@ module.exports = {
 
     const popupSelection = await popup.findElement(By.className('alpheios-popup__toolbar-selection'))
     let popupSelection_text = await popupSelection.getText()
+    popupSelection_text = popupSelection_text.replace(/[^\x20-\x7E]+/g, '').replace(' ', '').trim()
+    // await this.takeTestScreenshot(driver, '2-')
 
-    if (checkData.targetWord) {
-      expect(popupSelection_text).toEqual(checkData.targetWord)
+    
+    let hasCorrectTargetWord = true
+    if (checkData.targetWord && popupSelection_text  !== checkData.targetWord) {
+
+      console.info(`TargetWord "${checkData.targetWord}" is not the same as in popup - "${popupSelection_text}"`)
+      hasCorrectTargetWord = false
+      await driver.quit()
+      expect(hasCorrectTargetWord).toBeTruthy()
     }
 
-    if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
+    if (hasCorrectTargetWord) {
+      if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
 
-    checkData.text.forEach(text => {
-      const result = this.checkTextFromPopup(sourcePopupText, text)
+      checkData.text.forEach(text => {
+        const result = this.checkTextFromPopup(sourcePopupText, text)
 
-      if (!result.finalLexemeCheck) {
-        console.info(`Check text - "${result.text}", was not found in the source - "${result.sourcePopupText}"`)
-      } else {
-        console.info(`Check text - "${result.text}", was found in the source`)
-      }
-      expect(result.finalLexemeCheck).toBeTruthy()
-    })
+        if (!result.finalLexemeCheck) {
+          console.info(`Check text - "${result.text}", was not found in the source - "${result.sourcePopupText}"`)
+        } else {
+          console.info(`Check text - "${result.text}", was found in the source`)
+        }
+        expect(result.finalLexemeCheck).toBeTruthy()
+      })
+    }
   },
 
   checkTextFromPopup (sourcePopupText, text) {

@@ -26,9 +26,9 @@ module.exports = {
         }
       }
 
-      await driver.quit()
+      
     }
-
+    await driver.quit()
   },
 
   async dblclickLookupTest (params) {
@@ -53,9 +53,8 @@ module.exports = {
           await alph.checkHasInflectionsTab(driver)
         }
       }
-
-      await driver.quit()
     }
+    await driver.quit()
   }
 
 }
