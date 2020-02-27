@@ -11,7 +11,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "jest",
-    "test-browserstack": "jest/browserstack/* --env=node --maxConcurrency=2",
+    "test-browserstack": "jest/browserstack/* --env=node --maxConcurrency=1",
     "test-latin-simple-lookup": "jest tests/browserstack/latin-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-greek-simple-lookup": "jest tests/browserstack/greek-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-ara-simple-lookup": "jest tests/browserstack/ara-simple-lookup.test.js --env=node --maxConcurrency=2",
