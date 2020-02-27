@@ -143,10 +143,6 @@ module.exports = {
       await this.checkAndClosePanel(driver)
     }
     checkDisplayed = await lookupInputToolbar.isDisplayed()
-    if (!checkDisplayed) {
-      await this.takeTestScreenshot(driver)
-    }
-
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
 
