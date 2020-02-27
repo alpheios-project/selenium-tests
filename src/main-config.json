@@ -6,17 +6,17 @@
   "env": [
     {
       "browserName": "chrome",
-      "minBrowserVersion": "76",
+      "browserVersions": ["79.0"],
       "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
     },
     {
       "browserName": "safari",
-      "minBrowserVersion": "11",
+      "browserVersions": ["12.0"],
       "timeout": 10000
     },
     {
       "browserName": "firefox",
-      "minBrowserVersion": "70",
+      "browserVersions": ["74.0"],
       "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
     }
    ],

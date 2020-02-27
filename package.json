@@ -11,14 +11,14 @@
   "devDependencies": {},
   "scripts": {
     "test": "jest",
-    "test-browserstack": "jest/browserstack/**.test.js --env=node --maxConcurrency=2",
+    "test-browserstack": "jest/browserstack/* --env=node --maxConcurrency=2",
     "test-latin-simple-lookup": "jest tests/browserstack/latin-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-greek-simple-lookup": "jest tests/browserstack/greek-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-ara-simple-lookup": "jest tests/browserstack/ara-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-per-simple-lookup": "jest tests/browserstack/per-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-gez-simple-lookup": "jest tests/browserstack/gez-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-latin-no-result-lookup": "jest tests/browserstack/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
-    "test-latin-dblclick-lookup": "jest tests/browserstack/latin-dblclick-lookup.test.js --env=node --maxConcurrency=2",
+    "test-dblclick-lookup": "jest tests/browserstack/dblclick-lookup.test.js --env=node --maxConcurrency=2",
     
     "update-browsers": "node src/update-browser-list.js"
   },

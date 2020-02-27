@@ -36,25 +36,33 @@ module.exports = {
     const loaded = await alph.firstPageLoad(driver, params.url)
     
     expect(loaded).toBeTruthy()
-    if (loaded && params.lookupData) {
-      if (!Array.isArray(params.lookupData)) {
-        params.lookupData = [params.lookupData]
-      }
-
-      for(let i=0; i<params.lookupData.length; i++) {
-        let lookupData = params.lookupData[i]
-        await alph.dblclickLookupWord(driver, lookupData.clickData, params.lang)
-
-        if (lookupData.checkData.text) {
-          await alph.checkLexemeData(driver, lookupData.checkData)
+    // try {
+      if (loaded && params.lookupData) {
+        if (!Array.isArray(params.lookupData)) {
+          params.lookupData = [params.lookupData]
         }
 
-        if (lookupData.checkData.checkInflections) {
-          await alph.checkHasInflectionsTab(driver)
+        for(let i=0; i<params.lookupData.length; i++) {
+          let lookupData = params.lookupData[i]
+          const dblClickResult = await alph.dblclickLookupWord(driver, lookupData.clickData, params.lang)
+
+          if (dblClickResult && lookupData.checkData.text) {
+            await alph.checkLexemeData(driver, lookupData.checkData)
+          }
+
+          if (dblClickResult && lookupData.checkData.checkInflections) {
+            await alph.checkHasInflectionsTab(driver)
+          }
         }
       }
-    }
-    await driver.quit()
+      const sessionData = await driver.getSession()
+      if (sessionData) {
+        await driver.quit()
+      }
+    /* } catch (e) {
+      console.error(e)
+      await driver.quit()
+    } */ 
   }
 
 }

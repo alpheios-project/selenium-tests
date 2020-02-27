@@ -1,4 +1,4 @@
-const {webdriver, Builder, By, Key, Until} = require('selenium-webdriver')
+const {webdriver, Builder, By, Key, until} = require('selenium-webdriver')
 require('./fast-selenium.js')
 
 const basicCapabilities = {
@@ -25,66 +25,6 @@ module.exports = {
     return new Promise(resolve => setTimeout(resolve, ms))
   },
 
-  async defineDriver (capabilities, creds, timeout) {
-
-    let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
-    capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
-      'browserstack.user': creds.username,
-      'browserstack.key': creds.password
-    })
-    driver = new Builder()
-      .usingServer('http://hub-cloud.browserstack.com/wd/hub')
-      .withCapabilities(capabilitiesCurrent)
-      .build()
-    driver.manage().window().maximize()
-
-    timeoutG = timeout
-    return driver
-  },
-
-  async goToUrl (driver, url) {
-    await driver.get(url)
-  },
-
-  async checkAlpehiosLoaded (driver) {
-    await this.timeout(timeoutG)
-
-    // driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 10)
-    const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
-    return toolbar
-  },
-
-  async firstPageLoad (driver, url) {
-    // await this.timeout(timeoutG)
-
-    this.goToUrl(driver, url)
-    // await this.timeout(timeoutG * 3)
-
-    let loaded = true
-    try {
-      await this.checkAlpehiosLoaded(driver)
-    } catch (err) {
-      loaded = false
-      await driver.quit()
-    }
-
-    // await this.takeTestScreenshot(driver)
-    return loaded
-  },
-
-  async activateLookup (driver) {
-    const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
-    let lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
-
-    const lookupIconToolbar = await toolbar.findElement(By.className('alpheios-toolbar__lookup-control'))
-    await lookupIconToolbar.click()
-    
-    lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
-    const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
-
-    return { form: lookupFormToolbar, input: lookupInputToolbar }
-  },
-
   currentDate () {
     let dt = new Date()
     return dt.getFullYear() + '-'
@@ -107,6 +47,65 @@ module.exports = {
     })
   },
 
+  async defineDriver (capabilities, creds, timeout) {
+
+    let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
+    capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
+      'browserstack.user': creds.username,
+      'browserstack.key': creds.password
+    })
+    driver = new Builder()
+      .usingServer('http://hub-cloud.browserstack.com/wd/hub')
+      .withCapabilities(capabilitiesCurrent)
+      .build()
+    driver.manage().window().maximize()
+
+    const sessionData = await driver.getSession()
+    expect(sessionData.id_).not.toBeNull()
+
+    timeoutG = timeout
+    return driver
+  },
+
+  async goToUrl (driver, url) {
+    await driver.get(url)
+  },
+
+  async checkAlpehiosLoaded (driver) {
+    let toolbar =
+       await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4, 'Toolbar was not found');
+    return toolbar
+  },
+
+  async firstPageLoad (driver, url) {
+    this.goToUrl(driver, url)
+    let loaded = true
+    try {
+      await this.checkAlpehiosLoaded(driver)
+    } catch (err) {
+      loaded = false
+      const sessionData = await driver.getSession()
+      if (sessionData) {
+        await driver.quit()
+      }
+    }
+    return loaded
+  },
+
+  async activateLookup (driver) {
+    const toolbar =
+      await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+
+    const lookupIconToolbar = await toolbar.findElement(By.className('alpheios-toolbar__lookup-control'))
+    await lookupIconToolbar.click()
+
+    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.className('alpheios-lookup__form')), timeoutG * 2);
+    
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
+
+    return { form: lookupFormToolbar, input: lookupInputToolbar }
+  },
+
   async checkAndClosePanel (driver) {
     const panel = await driver.findElement(By.id('alpheios-panel-inner'))
     const displayedPanel = await panel.isDisplayed() 
@@ -116,6 +115,7 @@ module.exports = {
       const panelCloseButton = await panelHeader.findElement(By.className('alpheios-panel__close-btn'))
 
       await panelCloseButton.click()
+      await driver.wait(until.elementIsNotVisible(panel), timeoutG * 2)
     }
   },
 
@@ -128,13 +128,14 @@ module.exports = {
       const popupCloseButton = await popupHeader.findElement(By.className('alpheios-popup__close-btn'))
 
       await popupCloseButton.click()
+      await driver.wait(until.elementIsNotVisible(popup), timeoutG * 2)
     }
   },
   
 
   async getLookupBlock (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
-    let lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
+    const lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
     const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
 
     let checkDisplayed = await lookupInputToolbar.isDisplayed()
@@ -171,9 +172,10 @@ module.exports = {
 
   async changeSelectedOption (driver, selectElement, optionValue) {
     await selectElement.click()
-    await this.timeout(timeoutG)
+    const selectElement_text = await selectElement.getText()
 
-    const options = await selectElement.findElements(By.tagName('option'))
+    const options = await selectElement.findElements(By.css('option'))
+    
     let desiredOption
 
     for(let i = 0; i < options.length; i++) {
@@ -211,49 +213,53 @@ module.exports = {
     }
 
     if (resChangeLang) {
-      await this.timeout(timeoutG)
-
       await lookupBlock.input.click()
       await lookupBlock.input.sendKeys(clickData.word)
       
-      const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.tagName('button'))
+      const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.css('button'))
       await lookupFormButtonToolbar.click()
     }
   },
 
   async dblclickLookupWord (driver, clickData, lang) {
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
+
     const textPartForLookup = await driver.findElements(By.css(clickData.path))
 
     const num = clickData.num ? clickData.num - 1 : 0
-    const checkText = await textPartForLookup[num].getText()
-    console.info('checkText - ', checkText)
-    
-    await this.checkAndClosePopup(driver)
-    await this.checkAndClosePanel(driver)
-    
-    await textPartForLookup[num].click()
-    await this.timeout(timeoutG)
-    // await this.takeTestScreenshot(driver, '1-')
+    if (textPartForLookup && textPartForLookup[num]) {
+      await textPartForLookup[num].click()
+      return true
+    } else {
+      console.error(`There is no text by path ${clickData.path}, it could not be clicked.`)
+      expect(textPartForLookup.length).toBeGreaterThan(num)
+    }
+    return false
   },
 
   async checkLexemeData (driver, checkData) {
-    const popup = await driver.findElement(By.id('alpheios-popup-inner'))
-    const popupContent = await popup.findElement(By.className('alpheios-popup__content'))
-    let sourcePopupText = await popupContent.getText()
-    sourcePopupText = sourcePopupText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+    const popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
 
-    const popupSelection = await popup.findElement(By.className('alpheios-popup__toolbar-selection'))
+    const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-popup__content')), timeoutG * 4);
+    let sourcePopupText = await popupContent.getText()
+    sourcePopupText = sourcePopupText.replace(/\s{2,}/g, ' ').trim()
+
+    const popupSelection = await driver.wait(until.elementLocated(By.className('alpheios-popup__toolbar-text')), timeoutG * 4);
     let popupSelection_text = await popupSelection.getText()
-    popupSelection_text = popupSelection_text.replace(/[^\x20-\x7E]+/g, '').replace(' ', '').trim()
-    // await this.takeTestScreenshot(driver, '2-')
+    popupSelection_text = popupSelection_text.replace(' ', '').trim()
+
+    const popup_text = await popup.getText()
+
+    const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph__dictentry')), timeoutG * 4);
+    const popupDictentry_text = await popupDictentry.getText()
 
     
     let hasCorrectTargetWord = true
     if (checkData.targetWord && popupSelection_text  !== checkData.targetWord) {
 
-      console.info(`TargetWord "${checkData.targetWord}" is not the same as in popup - "${popupSelection_text}"`)
+      console.error(`TargetWord "${checkData.targetWord}" is not the same as in popup - "${popupSelection_text}"`)
       hasCorrectTargetWord = false
-      await driver.quit()
       expect(hasCorrectTargetWord).toBeTruthy()
     }
 
@@ -264,7 +270,7 @@ module.exports = {
         const result = this.checkTextFromPopup(sourcePopupText, text)
 
         if (!result.finalLexemeCheck) {
-          console.info(`Check text - "${result.text}", was not found in the source - "${result.sourcePopupText}"`)
+          console.error(`Check text - "${result.text}", was not found in the source - "${result.sourcePopupText}"`)
         } else {
           console.info(`Check text - "${result.text}", was found in the source`)
         }
@@ -302,7 +308,10 @@ module.exports = {
       await popupToolbarInflButton.click()
     } catch (err) {
       loadedInflButton = false
-      await driver.quit()
+      const sessionData = await driver.getSession()
+      if (sessionData) {
+        await driver.quit()
+      }
     }
     
     expect(loadedInflButton).toBeTruthy()

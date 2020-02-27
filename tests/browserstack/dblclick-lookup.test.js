@@ -1,6 +1,6 @@
   
 describe('latin-dblclick-lookup.test.js', () => {
-  const config = require('./config/latin-dblclick-lookup-config.js') 
+  const config = require('./config/dblclick-lookup-config.js') 
   const alph_tests = require('../../src/alph-selenium-test-cases')
   const versions = require('../../src/alph-config').versions(config.env)
 
@@ -15,6 +15,6 @@ describe('latin-dblclick-lookup.test.js', () => {
         lookupData: config.lookupData,
         lang: 'Latin'
       })
-    }, 5000000)
+    }, 50000000)
   })
 })
