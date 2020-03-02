@@ -96,12 +96,12 @@ module.exports = {
     const toolbar =
       await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
 
-    const lookupIconToolbar = await toolbar.findElement(By.className('alpheios-toolbar__lookup-control'))
+    const lookupIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-lookup'))
     await lookupIconToolbar.click()
 
-    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.className('alpheios-lookup__form')), timeoutG * 2);
+    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2);
     
-    const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input'))
 
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
@@ -111,8 +111,8 @@ module.exports = {
     const displayedPanel = await panel.isDisplayed() 
 
     if (displayedPanel) {
-      const panelHeader = await panel.findElement(By.className('alpheios-panel__header'))
-      const panelCloseButton = await panelHeader.findElement(By.className('alpheios-panel__close-btn'))
+      const panelHeader = await panel.findElement(By.id('alpheios-panel-header'))
+      const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel-close-btn'))
 
       await panelCloseButton.click()
       await driver.wait(until.elementIsNotVisible(panel), timeoutG * 2)
@@ -124,8 +124,8 @@ module.exports = {
     const displayedPopup = await popup.isDisplayed() 
 
     if (displayedPopup) {
-      const popupHeader = await popup.findElement(By.className('alpheios-popup__header'))
-      const popupCloseButton = await popupHeader.findElement(By.className('alpheios-popup__close-btn'))
+      const popupHeader = await popup.findElement(By.id('alpheios-popup-header'))
+      const popupCloseButton = await popupHeader.findElement(By.id('alpheios-panel-close-btn'))
 
       await popupCloseButton.click()
       await driver.wait(until.elementIsNotVisible(popup), timeoutG * 2)
@@ -135,8 +135,8 @@ module.exports = {
 
   async getLookupBlock (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
-    const lookupFormToolbar = await toolbar.findElement(By.css('.alpheios-lookup__form'))
-    const lookupInputToolbar = await lookupFormToolbar.findElement(By.tagName('input'))
+    const lookupFormToolbar = await toolbar.findElement(By.id('alpheios-lookup-form'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input'))
 
     let checkDisplayed = await lookupInputToolbar.isDisplayed()
     if (!checkDisplayed) {
@@ -147,18 +147,18 @@ module.exports = {
   },
 
   async checkLanguageInLookup (driver, form, lang) {
-    const langHint = await form.findElement(By.className('alpheios-lookup__lang-hint'))
+    const langHint = await form.findElement(By.id('alpheios-lookup-form-lang-hint'))
     let langHint_text = await langHint.getText()
     langHint_text = langHint_text.replace('(', '').replace(')', '')
     return langHint_text === lang
   },
 
   async changeLookupLanguage (driver, form, lang) {
-    const langChangeLink = await form.findElement(By.className('alpheios-lookup__lang-change'))
+    const langChangeLink = await form.findElement(By.id('alpheios-lookup-form-lang-change'))
 
     if (langChangeLink.isDisplayed()) {
       langChangeLink.click()
-      const langChangeSelect = await form.findElement(By.className('alpheios-select alpheios-setting__control'))
+      const langChangeSelect = await form.findElement(By.className('alpheios-setting__control'))
       const result = await this.changeSelectedOption(driver, langChangeSelect, lang)
       return result
     }
@@ -212,7 +212,7 @@ module.exports = {
       await lookupBlock.input.click()
       await lookupBlock.input.sendKeys(clickData.word)
       
-      const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.css('button'))
+      const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
       await lookupFormButtonToolbar.click()
     }
   },
