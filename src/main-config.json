@@ -6,7 +6,8 @@
   "env": [
     {
       "browserName": "chrome",
-      "minBrowserVersion": "76"
+      "minBrowserVersion": "76",
+      "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
     },
     {
       "browserName": "safari",
@@ -15,7 +16,8 @@
     },
     {
       "browserName": "firefox",
-      "minBrowserVersion": "70"
+      "minBrowserVersion": "70",
+      "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
     }
    ],
   "timeout": 6000
