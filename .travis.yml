@@ -11,7 +11,7 @@ deploy:
     secure: nsTSUzc7603f60a/3GQ1c/5bY/HeikEN2IxoNAB9AlG/yEQfTWKBmhZ5oNuJOurvKx1o46Etn1wq5WBMzHMrVr5Z6oO39hf9hy4OvL/NqOEdQWt1JFKpuerZ2A4zB0+vN8dZ49VRp8kWa7xmH4nq3WAypKRyKxN0x4de/Tyw0QH6zv01JyEhQ6tlfcAi1sexS77YOlPH4DzbQDoeWOWAGPVrBwgL3+oUIfVzbM72CEn7n/o115t/ZGkK2jxB5Wj9CR+6uGM91dlKxuapPDprvjQ+N1XvK4Rb2Qn4V0kGhbli9a1+wc91Qjo7yCQ4dDc+ozFyN5qWgyO0I1blre1ZnmcB3ZEcCAQm+ORiXVOM57fjoc8+biGU+l/oJnA2CYafpn3Vy1tTCpom/J1QGNVIjRY83Z1/Q4vq9i5Ne8L+zNSTbHoKv1dhOO+VR7ImXmJfDQ9D7XPuehYBvPoc69bnWpfaJMZbDPi/zhr9vKU38DYf04IRo563LlrXbXzMng3vXTGb3SkbdlnK++aM9VS2II/LPKivxp3bJggue3BQf0Pm7Q0yz6CrU3G3ztwNcmZxP8VVnaiZm7Bze2yllC5R7hIn9myN0CmFfFfZCUwPS3ATcpJrjmLchRfhFTKQps+A64f4cJonpxfB2lgA/hwWT8NgO6aDf4VUygP5zSABstY=
   bucket: alpheios-misc-dev
   region: us-east-2
-  local_dir: dist
+  local_dir: public
   upload_dir: selenium-tests
   acl: public_read
   cache_control: no-cache
