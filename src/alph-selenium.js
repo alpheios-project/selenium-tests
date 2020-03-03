@@ -73,7 +73,7 @@ module.exports = {
 
   async checkAlpehiosLoaded (driver) {
     let toolbar =
-       await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4, 'Toolbar was not found');
+       await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
     return toolbar
   },
 
@@ -84,10 +84,6 @@ module.exports = {
       await this.checkAlpehiosLoaded(driver)
     } catch (err) {
       loaded = false
-      const sessionData = await driver.getSession()
-      if (sessionData) {
-        await driver.quit()
-      }
     }
     return loaded
   },
@@ -316,9 +312,106 @@ module.exports = {
       const panel = await driver.findElement(By.id('alpheios-panel__inflections-panel'))
       const panelTitle = await panel.findElement(By.css('h1.alpheios-panel__title'))
     
-      let panelTitle_text = await panelTitle.getText()
-      panelTitle_text = panelTitle_text.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
-      expect(panelTitle_text.toLowerCase()).toEqual('inflection tables')
+      let panelTitleText = await panelTitle.getText()
+      panelTitleText = panelTitleText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
+      expect(panelTitleText.toLowerCase()).toEqual('inflection tables')
     }
+  },
+
+  async checkToolbarHelpAction (driver) {
+    await this.checkAndClosePanel(driver)
+    const toolbarBtnHelp = await driver.wait(until.elementLocated(By.id('alpheios-toolbar-navbuttons-info')), timeoutG * 4)
+    await toolbarBtnHelp.click()
+
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+    
+    const panelText = await panel.getText()
+    const checkText = ['Help', 'FAQ/Known Issues', 'Double-click on a word to see lemmas']
+
+    return checkText.every(text => panelText.includes(text))
+  },
+
+  async checkToolbarInflBrowserAction (driver) {
+    await this.checkAndClosePanel(driver)
+    const toolbarBtnInflBrowser = await driver.findElement(By.id('alpheios-toolbar-navbuttons-inflectionsbrowser'))
+    let toolbarBtnInflBrowserDisplayed = await toolbarBtnInflBrowser.isDisplayed()
+    if (!toolbarBtnInflBrowserDisplayed) {
+      const toolbarBtnShowNav = await driver.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await toolbarBtnShowNav.click()
+    }
+
+    await toolbarBtnInflBrowser.click()
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+    
+    const panelText = await panel.getText()
+    const checkText = ['Browse Inflection Tables', 'Latin Inflection Browser', 'Greek Inflection Browser']
+
+    return checkText.every(text => panelText.includes(text))
+  },
+
+  async checkToolbarGrammarAction (driver) {
+    await this.checkAndClosePanel(driver)
+    const toolbarBtnGrammar = await driver.findElement(By.id('alpheios-toolbar-navbuttons-grammar'))
+    let toolbarBtnGrammarDisplayed = await toolbarBtnGrammar.isDisplayed()
+    if (!toolbarBtnGrammarDisplayed) {
+      const toolbarBtnShowNav = await driver.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await toolbarBtnShowNav.click()
+    }
+
+    await toolbarBtnGrammar.click()
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+    
+    const panelText = await panel.getText()
+       
+    const checkText = ['New Latin Grammar, by Charles E. Bennett. Copyright 1895; 1908; 1918.']
+
+    return checkText.every(text => panelText.includes(text))
+    
+  },
+
+  async checkToolbarUserAction (driver) {
+    await this.checkAndClosePanel(driver)
+    const toolbarBtnUser = await driver.findElement(By.id('alpheios-toolbar-navbuttons-user'))
+    let toolbarBtnUserDisplayed = await toolbarBtnUser.isDisplayed()
+    if (!toolbarBtnUserDisplayed) {
+      const toolbarBtnShowNav = await driver.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await toolbarBtnShowNav.click()
+    }
+
+    await toolbarBtnUser.click()
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+    
+    const panelText = await panel.getText()
+    // console.info('panelText', panelText)
+    const checkText = ['Log In']
+
+    return checkText.every(text => panelText.includes(text))
+  },
+
+  async checkToolbarOptionsAction (driver) {
+    await this.checkAndClosePanel(driver)
+    const toolbarBtnOptions = await driver.findElement(By.id('alpheios-toolbar-navbuttons-options'))
+    let toolbarBtnOptionsDisplayed = await toolbarBtnOptions.isDisplayed()
+    if (!toolbarBtnOptionsDisplayed) {
+      const toolbarBtnShowNav = await driver.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await toolbarBtnShowNav.click()
+    }
+
+    await toolbarBtnOptions.click()
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+    
+    const panelText = await panel.getText()
+    // console.info('panelText', panelText)
+    const checkText = ['Resize options', 'Panel position:']
+
+    return checkText.every(text => panelText.includes(text))
   }
+
+  
 }
+ 
