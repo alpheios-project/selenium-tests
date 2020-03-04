@@ -1,5 +1,5 @@
 module.exports = {
-  testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html',
+  testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html'/*,
   env: [{
     browserName: 'firefox',
     browserVersions: ['72.0'],
@@ -16,14 +16,6 @@ module.exports = {
     browserName: "safari",
     browserVersions: ["12.1"],
     timeout: 10000
-  }],
-  lookupData: {
-    clickData: {
-      word: 'trrcchx',
-    },
-    checkData: {
-      text: 'Lexical query produced no results'
-    }
   }
+]*/
 }
-  
