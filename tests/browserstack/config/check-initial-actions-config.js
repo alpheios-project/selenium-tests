@@ -1,5 +1,5 @@
 module.exports = {
-  testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html'/*,
+  testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html',
   env: [{
     browserName: 'firefox',
     browserVersions: ['72.0'],
@@ -17,5 +17,5 @@ module.exports = {
     browserVersions: ["12.1"],
     timeout: 10000
   }
-]*/
+]
 }
