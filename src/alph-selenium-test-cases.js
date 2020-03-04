@@ -3,7 +3,7 @@ const config = require('./main-config.json')
 
 module.exports = {
   async simpleLookupTest (params) {
-    const driver = await alph.defineDriver(params.version, config.auth, params.version.timeout)
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
     
     expect(loaded).toBeTruthy()
@@ -30,7 +30,7 @@ module.exports = {
   },
 
   async dblclickLookupTest (params) {
-    const driver = await alph.defineDriver(params.version, config.auth, params.version.timeout)
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
     
     expect(loaded).toBeTruthy()
@@ -56,7 +56,7 @@ module.exports = {
   },
 
   async simpleInitialActionsTest (params) {
-    const driver = await alph.defineDriver(params.version, config.auth, params.version.timeout)
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
     
     expect(loaded).toBeTruthy()

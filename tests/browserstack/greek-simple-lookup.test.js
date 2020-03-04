@@ -10,11 +10,12 @@ describe('greek-simple-lookup.test.js', () => {
   versions.forEach(version => {
     it(`should execute simple (greek) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Simple (greek) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Greek',
-        checkInflections: true
+        checkInflections: true,
+        buildName: 'Simple (greek) lookup'
       })
     }, 50000000)
   })
