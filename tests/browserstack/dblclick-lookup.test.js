@@ -8,9 +8,9 @@ describe('latin-dblclick-lookup.test.js', () => {
   afterEach(() => {})
 
   versions.forEach(version => {
-    it(`should execute dblclick (latin) lookup - ${version.name}`, async () => {
+    it(`should execute dblclick (click) lookup - ${version.name}`, async () => {
       await alph_tests.dblclickLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Dblclick (click) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Latin'

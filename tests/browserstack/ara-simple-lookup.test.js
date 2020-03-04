@@ -10,7 +10,7 @@ describe('ara-simple-lookup.test.js', () => {
   versions.forEach(version => {
     it(`should execute simple (ara) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Simple (ara) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Arabic',

@@ -1,11 +1,12 @@
 module.exports = {
   // testUrl: 'https://texts.alpheios.net',
   testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html',
-  /*env: {
+  env: {
     browserName: 'firefox',
     browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
-  },*/
+    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
+    timeout: 14000
+  },
   lookupData: [
     {
       clickData: {

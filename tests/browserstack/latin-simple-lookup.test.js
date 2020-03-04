@@ -9,8 +9,9 @@ describe('latin-simple-lookup.test.js', () => {
 
   versions.forEach(version => {
     it(`should execute simple (latin) lookup - ${version.name}`, async () => {
+      console.info('version - ', version)
       await alph_tests.simpleLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Simple (latin) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Latin',

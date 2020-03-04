@@ -7,7 +7,7 @@ const basicCapabilities = {
   'os' : 'Windows',
   'os_version' : '10',
   'resolution' : '1280x1024',
-  'name' : 'Alpeious Test',
+  'name' : 'Alpeios Test',
   'acceptSslCerts' : 'true',
   'browserstack.debug' : 'true',
   'projectName': 'Alpheios Testing',
@@ -39,7 +39,6 @@ module.exports = {
   async takeTestScreenshot (driver, prev = '') {
     const fs = require('fs')
     const img = await driver.takeScreenshot()
-    const newDate = new Date()
 
     const imgFileName = `tests/browserstack/screens/${prev}-screenshot-${this.currentDate()}.png`
     fs.writeFile(imgFileName, img, 'base64', (err) => { 
@@ -48,12 +47,13 @@ module.exports = {
   },
 
   async defineDriver (capabilities, creds, timeout) {
-
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
+
     capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
       'browserstack.user': creds.username,
       'browserstack.key': creds.password
     })
+
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)
@@ -108,6 +108,7 @@ module.exports = {
 
     if (displayedPanel) {
       const panelHeader = await panel.findElement(By.id('alpheios-panel-header'))
+      
       const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel-close-btn'))
 
       await panelCloseButton.click()
@@ -121,7 +122,7 @@ module.exports = {
 
     if (displayedPopup) {
       const popupHeader = await popup.findElement(By.id('alpheios-popup-header'))
-      const popupCloseButton = await popupHeader.findElement(By.id('alpheios-panel-close-btn'))
+      const popupCloseButton = await popupHeader.findElement(By.id('alpheios-popup-toolbar-btn-close'))
 
       await popupCloseButton.click()
       await driver.wait(until.elementIsNotVisible(popup), timeoutG * 2)

@@ -8,9 +8,9 @@ describe('per-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versions.forEach(version => {
-    it(`should execute simple (per) lookup - ${version.name}`, async () => {
+    it.skip(`should execute simple (per) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Simple (per) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Persian',

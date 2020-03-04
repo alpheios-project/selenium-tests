@@ -10,11 +10,12 @@ describe('gez-simple-lookup.test.js', () => {
   versions.forEach(version => {
     it(`should execute simple (gez) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
-        version,
+        capabilities: Object.assign(version, { buildName: 'Simple (gez) lookup' } ),
         url: config.testUrl,
         lookupData: config.lookupData,
         lang: 'Ancient Ethiopic (Ge\'ez - Experimental)',
-        checkInflections: false
+        checkInflections: false,
+        buildName: 'Simple (gez) lookup'
       })
     }, 50000000)
   })
