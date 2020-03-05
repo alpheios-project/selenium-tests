@@ -1,6 +1,6 @@
 module.exports = {
   // testUrl: 'https://texts.alpheios.net',
-  testUrl: 'http://alpheios-test.irina-sklyarova.ru/demo/index-selenium.html',
+  testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
     browserName: 'firefox',
     browserVersions: ['72.0'],

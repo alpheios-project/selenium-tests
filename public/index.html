@@ -28,7 +28,7 @@
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function(event) {
           import ('./embed-dist/alpheios-embedded.js').then(embedLib => {
-            window.AlpheiosEmbed.importDependencies({ mode: 'cdn' }).then(Embedded => {
+            window.AlpheiosEmbed.importDependencies({ mode: 'development' }).then(Embedded => {
               new Embedded(
                 {
                   clientId: 'selenium-tests',
