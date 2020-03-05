@@ -3,7 +3,7 @@ node_js:
 - 13.2
 cache: npm
 script: 
- - npm run test-ci
+ - travis_wait npm run test
 deploy:
   provider: s3
   cleanup: true
