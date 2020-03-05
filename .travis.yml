@@ -19,4 +19,4 @@ deploy:
   cache_control: no-cache
   on:
     repo: alpheios-project/selenium-tests
-    branch: travis
+    branch: master
