@@ -2,6 +2,8 @@ language: node_js
 node_js:
 - 13.2
 cache: npm
+script: 
+ - npm run test-ci
 deploy:
   provider: s3
   cleanup: true
@@ -17,4 +19,4 @@ deploy:
   cache_control: no-cache
   on:
     repo: alpheios-project/selenium-tests
-    branch: master
+    branch: travis
