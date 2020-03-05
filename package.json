@@ -11,7 +11,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "npm run test-check-initial-actions",
-    "test-browserstack": "jest/browserstack/* --env=node --maxConcurrency=1",
+    "test-browserstack": "jest tests/browserstack/* --env=node --maxConcurrency=1",
     "test-latin-simple-lookup": "jest tests/browserstack/latin-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-greek-simple-lookup": "jest tests/browserstack/greek-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-ara-simple-lookup": "jest tests/browserstack/ara-simple-lookup.test.js --env=node --maxConcurrency=2",
@@ -19,9 +19,7 @@
     "test-gez-simple-lookup": "jest tests/browserstack/gez-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-latin-no-result-lookup": "jest tests/browserstack/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
     "test-dblclick-lookup": "jest tests/browserstack/dblclick-lookup.test.js --env=node --maxConcurrency=2",
-
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
-    
     "update-browsers": "node src/update-browser-list.js"
   },
   "author": "",
