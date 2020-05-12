@@ -5,8 +5,8 @@
   "main": "main.js",
   "dependencies": {
     "axios": "^0.19.2",
-    "jest": "^25.1.0",
-    "selenium-webdriver": "^4.0.0-alpha.5"
+    "jest": "^25.5.4",
+    "selenium-webdriver": "^4.0.0-alpha.7"
   },
   "devDependencies": {},
   "scripts": {
@@ -20,6 +20,7 @@
     "test-latin-no-result-lookup": "jest tests/browserstack/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
     "test-dblclick-lookup": "jest tests/browserstack/dblclick-lookup.test.js --env=node --maxConcurrency=2",
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
+    "test-manual": "jest tests/manual-tests/webextension-test.test.js --env=node",
     "update-browsers": "node src/update-browser-list.js"
   },
   "author": "",

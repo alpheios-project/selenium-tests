@@ -18,7 +18,7 @@ describe('main-async.test.js', () => {
     driverChrome.quit()
   })
 
-  it.skip('should execute male (latin) lookup', async () => {
+  it('should execute male (latin) lookup', async () => {
     await driverChrome.get('https://texts.alpheios.net')
 
     const toolbar = await driverChrome.findElement(By.id('alpheios-toolbar-inner'))
