@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "axios": "^0.19.2",
+    "cross-env": "^7.0.2",
     "jest": "^25.5.4",
     "selenium-webdriver": "^4.0.0-alpha.7"
   },
@@ -12,6 +13,7 @@
   "scripts": {
     "test": "npm run test-check-initial-actions",
     "test-browserstack": "jest tests/browserstack/* --env=node --maxConcurrency=1",
+    "test-browserstack-qa": "cross-env BRANCH='qa' jest tests/browserstack/* --env=node --maxConcurrency=1",
     "test-latin-simple-lookup": "jest tests/browserstack/latin-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-greek-simple-lookup": "jest tests/browserstack/greek-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-ara-simple-lookup": "jest tests/browserstack/ara-simple-lookup.test.js --env=node --maxConcurrency=2",

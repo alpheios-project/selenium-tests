@@ -7,8 +7,8 @@ module.exports = {
       cfg = config
     }
     let testUrl = cfg.testUrl
-    if (process.env.branch) {
-      testUrl.replace('index.html',`index-${process.env.branch}.html`)
+    if (process.env.BRANCH) {
+      testUrl = testUrl.replace('index.html',`index-${process.env.BRANCH}.html`)
     }
     return testUrl
   },
