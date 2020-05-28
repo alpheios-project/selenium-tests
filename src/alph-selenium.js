@@ -33,7 +33,7 @@ module.exports = {
                 + ((dt.getHours() < 10) ? '0' : '') + dt.getHours() + "-"
                 + ((dt.getMinutes() < 10) ? '0' : '') + dt.getMinutes() + "-"
                 + ((dt.getSeconds() < 10) ? '0' : '') + dt.getSeconds()
-  
+
   },
 
   async takeTestScreenshot (driver, prev = '') {
@@ -41,7 +41,7 @@ module.exports = {
     const img = await driver.takeScreenshot()
 
     const imgFileName = `tests/browserstack/screens/${prev}-screenshot-${this.currentDate()}.png`
-    fs.writeFile(imgFileName, img, 'base64', (err) => { 
+    fs.writeFile(imgFileName, img, 'base64', (err) => {
       if (err) { console.error(err) } else { console.info('Finished') }
     })
   },
@@ -96,7 +96,7 @@ module.exports = {
     await lookupIconToolbar.click()
 
     const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2);
-    
+
     const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input'))
 
     return { form: lookupFormToolbar, input: lookupInputToolbar }
@@ -104,11 +104,11 @@ module.exports = {
 
   async checkAndClosePanel (driver) {
     const panel = await driver.findElement(By.id('alpheios-panel-inner'))
-    const displayedPanel = await panel.isDisplayed() 
+    const displayedPanel = await panel.isDisplayed()
 
     if (displayedPanel) {
       const panelHeader = await panel.findElement(By.id('alpheios-panel-header'))
-      
+
       const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel-close-btn'))
 
       await panelCloseButton.click()
@@ -118,7 +118,7 @@ module.exports = {
 
   async checkAndClosePopup (driver) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
-    const displayedPopup = await popup.isDisplayed() 
+    const displayedPopup = await popup.isDisplayed()
 
     if (displayedPopup) {
       const popupHeader = await popup.findElement(By.id('alpheios-popup-header'))
@@ -128,7 +128,7 @@ module.exports = {
       await driver.wait(until.elementIsNotVisible(popup), timeoutG * 2)
     }
   },
-  
+
 
   async getLookupBlock (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
@@ -168,7 +168,7 @@ module.exports = {
     const selectElement_text = await selectElement.getText()
 
     const options = await selectElement.findElements(By.css('option'))
-    
+
     let desiredOption
 
     for(let i = 0; i < options.length; i++) {
@@ -195,7 +195,7 @@ module.exports = {
     if (needActivation) {
       lookupBlock = await this.activateLookup(driver)
 
-      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)  
+      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
       if (!resLangCheck) {
         resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
       }
@@ -208,13 +208,13 @@ module.exports = {
     if (resChangeLang) {
       await lookupBlock.input.click()
       await lookupBlock.input.sendKeys(clickData.word)
-      
+
       const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
       await lookupFormButtonToolbar.click()
     }
   },
 
-  async dblclickLookupWord (driver, clickData, lang) {
+  async clickLookupWord (driver, clickData, lang) {
     await this.checkAndClosePopup(driver)
     await this.checkAndClosePanel(driver)
 
@@ -247,7 +247,7 @@ module.exports = {
     const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph__dictentry')), timeoutG * 4);
     const popupDictentry_text = await popupDictentry.getText()
 
-    
+
     let hasCorrectTargetWord = true
     if (checkData.targetWord && popupSelection_text  !== checkData.targetWord) {
 
@@ -287,14 +287,14 @@ module.exports = {
         if (finalLexemeCheck) {
           break
         }
-      }      
+      }
     }
     return { finalLexemeCheck, sourcePopupText, text }
   },
 
   async checkHasInflectionsTab (driver) {
     const popup = await driver.findElement(By.id('alpheios-popup-inner'))
-   
+
     let loadedInflButton = true
     try {
       const popupToolbarInflButton = await popup.findElement(By.css('.alpheios-popup__toolbar-buttons > div:nth-child(2)'))
@@ -306,13 +306,13 @@ module.exports = {
         await driver.quit()
       }
     }
-    
+
     expect(loadedInflButton).toBeTruthy()
 
     if (loadedInflButton) {
       const panel = await driver.findElement(By.id('alpheios-panel__inflections-panel'))
       const panelTitle = await panel.findElement(By.css('h1.alpheios-panel__title'))
-    
+
       let panelTitleText = await panelTitle.getText()
       panelTitleText = panelTitleText.replace(/[^\x20-\x7E]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
       expect(panelTitleText.toLowerCase()).toEqual('inflection tables')
@@ -326,7 +326,7 @@ module.exports = {
 
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
-    
+
     const panelText = await panel.getText()
     const checkText = ['Help', 'FAQ/Known Issues', 'Double-click on a word to see lemmas']
 
@@ -345,7 +345,7 @@ module.exports = {
     await toolbarBtnInflBrowser.click()
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
-    
+
     const panelText = await panel.getText()
     const checkText = ['Browse Inflection Tables', 'Latin Inflection Browser', 'Greek Inflection Browser']
 
@@ -364,13 +364,13 @@ module.exports = {
     await toolbarBtnGrammar.click()
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
-    
+
     const panelText = await panel.getText()
-       
+
     const checkText = ['New Latin Grammar, by Charles E. Bennett. Copyright 1895; 1908; 1918.']
 
     return checkText.every(text => panelText.includes(text))
-    
+
   },
 
   async checkToolbarUserAction (driver) {
@@ -385,7 +385,7 @@ module.exports = {
     await toolbarBtnUser.click()
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
-    
+
     const panelText = await panel.getText()
     // console.info('panelText', panelText)
     const checkText = ['Log In']
@@ -405,7 +405,7 @@ module.exports = {
     await toolbarBtnOptions.click()
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
-    
+
     const panelText = await panel.getText()
     // console.info('panelText', panelText)
     const checkText = ['Resize options', 'Panel position:']
@@ -413,6 +413,5 @@ module.exports = {
     return checkText.every(text => panelText.includes(text))
   }
 
-  
+
 }
- 

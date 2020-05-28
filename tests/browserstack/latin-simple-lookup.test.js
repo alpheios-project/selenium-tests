@@ -1,8 +1,10 @@
-  
+
 describe('latin-simple-lookup.test.js', () => {
-  const config = require('./config/latin-simple-lookup-config.js') 
+  const config = require('./config/latin-simple-lookup-config.js')
   const alph_tests = require('../../src/alph-selenium-test-cases')
-  const versions = require('../../src/alph-config').versions(config.env)
+  const configurator = require('../../src/alph-config')
+  const versions = configurator.versions(config.env)
+  const testUrl = configurator.testUrl(config)
 
   beforeEach(() => {})
   afterEach(() => {})
@@ -12,7 +14,7 @@ describe('latin-simple-lookup.test.js', () => {
       console.info('version - ', version)
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (latin) lookup' } ),
-        url: config.testUrl,
+        url: testUrl,
         lookupData: config.lookupData,
         lang: 'Latin',
         checkInflections: true
