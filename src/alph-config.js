@@ -10,7 +10,6 @@ module.exports = {
     if (process.env.branch) {
       testUrl.replace('index.html',`index-${process.env.branch}.html`)
     }
-    console.info("test url",cfg)
     return testUrl
   },
 
