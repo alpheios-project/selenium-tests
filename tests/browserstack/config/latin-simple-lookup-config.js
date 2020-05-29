@@ -5,7 +5,7 @@ module.exports = {
     browserName: 'firefox',
     browserVersions: ['72.0'],
     osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
-    timeout: 14000
+    timeout: 28000
   },
   lookupData: [
     {

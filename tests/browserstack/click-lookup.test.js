@@ -1,6 +1,6 @@
 
-describe('per-simple-lookup.test.js', () => {
-  const config = require('./config/per-simple-lookup-config.js')
+describe('latin-click-lookup.test.js', () => {
+  const config = require('./config/click-lookup-config.js')
   const alph_tests = require('../../src/alph-selenium-test-cases')
   const configurator = require('../../src/alph-config')
   const versions = configurator.versions(config.env)
@@ -10,15 +10,13 @@ describe('per-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versions.forEach(version => {
-    it.skip(`should execute simple (per) lookup - ${version.name}`, async () => {
-      await alph_tests.simpleLookupTest({
-        capabilities: Object.assign(version, { buildName: 'Simple (per) lookup' } ),
+    it(`should execute click lookup - ${version.name}`, async () => {
+      await alph_tests.clickLookupTest({
+        capabilities: Object.assign(version, { buildName: 'Click lookup' } ),
         url: testUrl,
         lookupData: config.lookupData,
-        lang: 'Persian',
-        checkInflections: false
+        lang: 'Latin'
       })
     }, 50000000)
   })
-
 })
