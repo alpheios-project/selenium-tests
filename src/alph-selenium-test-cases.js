@@ -2,10 +2,15 @@ const alph = require('./alph-selenium')
 const config = require('./main-config.json')
 
 module.exports = {
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.lookupData list, executes a lookup using the
+   * lookup box, verifies lexeme data and  whether or not there are inflections
+   */
   async simpleLookupTest (params) {
     const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
-    
+
     expect(loaded).toBeTruthy()
     if (loaded && params.lookupData) {
 
@@ -16,7 +21,7 @@ module.exports = {
       for(let i=0; i<params.lookupData.length; i++) {
         let lookupData = params.lookupData[i]
         await alph.lookupWord(driver, lookupData.clickData, params.lang, i === 0)
-        
+
         if (lookupData.checkData.text) {
           await alph.checkLexemeData(driver, lookupData.checkData)
         }
@@ -29,10 +34,16 @@ module.exports = {
     await driver.quit()
   },
 
-  async dblclickLookupTest (params) {
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.lookupData list, executes a lookup using
+   * a single click on the word, verifies lexeme data and  whether or not
+   * there are inflections
+   */
+  async clickLookupTest (params) {
     const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
-    
+
     expect(loaded).toBeTruthy()
     if (loaded && params.lookupData) {
       if (!Array.isArray(params.lookupData)) {
@@ -41,13 +52,13 @@ module.exports = {
 
       for(let i=0; i<params.lookupData.length; i++) {
         let lookupData = params.lookupData[i]
-        const dblClickResult = await alph.dblclickLookupWord(driver, lookupData.clickData, params.lang)
+        const clickResult = await alph.clickLookupWord(driver, lookupData.clickData, params.lang)
 
-        if (dblClickResult && lookupData.checkData.text) {
+        if (clickResult && lookupData.checkData.text) {
           await alph.checkLexemeData(driver, lookupData.checkData)
         }
 
-        if (dblClickResult && lookupData.checkData.checkInflections) {
+        if (clickResult && lookupData.checkData.checkInflections) {
           await alph.checkHasInflectionsTab(driver)
         }
       }
@@ -55,10 +66,18 @@ module.exports = {
     await driver.quit()
   },
 
+  /**
+   * @param {Object} params contains test parameters
+   * Tests clicks on:
+   * - toolbar help icon
+   * - toolbar grammar icon
+   * - toolbar user icon
+   * - toolbar options icon
+   */
   async simpleInitialActionsTest (params) {
     const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
     const loaded = await alph.firstPageLoad(driver, params.url)
-    
+
     expect(loaded).toBeTruthy()
 
     const resultHelpAction = await alph.checkToolbarHelpAction(driver)
@@ -93,5 +112,5 @@ module.exports = {
 
     await driver.quit()
   }
-  
+
 }

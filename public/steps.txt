@@ -1,9 +1,0 @@
-1. Use Firefox Developer Build
-2. Create Firefox Profile:
-   - open `about:profiles`
-   - add new profile to a specific folder
-   - launch browser with this profile
-   - define permission for unsigned extensions:
-       - type about:config into the URL bar in Firefox
-       - in the Search box type xpinstall.signatures.required
-       - double-click the preference, or right-click and selected "Toggle", to set it to false.
