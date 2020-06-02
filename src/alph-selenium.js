@@ -97,7 +97,7 @@ module.exports = {
 
     const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2);
     
-    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input__toolbar'))
 
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
@@ -133,7 +133,7 @@ module.exports = {
   async getLookupBlock (driver) {
     const toolbar = await driver.findElement(By.id('alpheios-toolbar-inner'))
     const lookupFormToolbar = await toolbar.findElement(By.id('alpheios-lookup-form'))
-    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input__toolbar'))
 
     let checkDisplayed = await lookupInputToolbar.isDisplayed()
     if (!checkDisplayed) {
