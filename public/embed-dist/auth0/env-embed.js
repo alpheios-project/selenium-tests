@@ -2,9 +2,11 @@ const auth0Env = {
   CLIENT_ID: 'iT75HkBHThA4QdFwFoZRofLC41vVyvAt',
   DOMAIN: 'alpheios.auth0.com',
   ENDPOINTS: { 
-    'wordlist' : 'https://w2tfh159s2.execute-api.us-east-2.amazonaws.com/prod/words',
+    'wordlist' : 'https://userapis-dev.alpheios.net/v1/words',
+    'settings' : 'https://settings-dev.alpheios.net/v1/settings'
   },
-  AUDIENCE: 'alpheios.net:apis',
+  AUDIENCE: 'alpheios.net:dev-apis',
   LOGOUT_URL: 'https://alpheios.net/pages/logout',
-  TEST_ID: 'alpheiosMockUserIdlP0DWnmNxe'
+  TEST_ID: 'alpheiosMockUserId021d0136-51d6-4e36-9d2d-3b6c96707e80'
+
 }
