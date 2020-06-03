@@ -12,7 +12,7 @@ describe('latin-simple-lookup.test.js', () => {
   versions.forEach(version => {
     it(`should execute simple (latin) lookup - ${version.name}`, async () => {
       console.info('version - ', version)
-      console.info('testUrl - ', testUrl)
+      // console.info('testUrl - ', testUrl)
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (latin) lookup' } ),
         url: testUrl,

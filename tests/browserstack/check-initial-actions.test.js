@@ -13,7 +13,8 @@ describe('ara-simple-lookup.test.js', () => {
     it(`should execute simple initial actions - ${version.name}`, async () => {
       await alph_tests.simpleInitialActionsTest({
         capabilities: Object.assign(version, { buildName: 'Simple initial actions' } ),
-        url: testUrl
+        url: testUrl,
+        checkData: config.checkData
       })
     }, 50000000)
   })
