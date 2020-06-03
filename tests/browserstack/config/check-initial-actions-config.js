@@ -1,9 +1,9 @@
 module.exports = {
   testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
-    browserName: 'firefox',
+    browserName: 'safari',
     // browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
+    // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }]
   },
   checkData: {
     help: ['Help', 'FAQ/Known Issues', 'Double-click on a word to see lemmas'],
