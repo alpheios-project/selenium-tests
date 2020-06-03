@@ -80,31 +80,31 @@ module.exports = {
 
     expect(loaded).toBeTruthy()
 
-    const resultHelpAction = await alph.checkToolbarHelpAction(driver)
+    const resultHelpAction = await alph.checkToolbarHelpAction(driver, params.checkData.help)
     if (!resultHelpAction) {
       await driver.quit()
     }
     expect(resultHelpAction).toBeTruthy()
 
-    const resultInflBrowserAction = await alph.checkToolbarInflBrowserAction(driver)
+    const resultInflBrowserAction = await alph.checkToolbarInflBrowserAction(driver, params.checkData.inflBrowser)
     if (!resultInflBrowserAction) {
       await driver.quit()
     }
     expect(resultInflBrowserAction).toBeTruthy()
 
-    const resultGrammarAction = await alph.checkToolbarGrammarAction(driver)
+    const resultGrammarAction = await alph.checkToolbarGrammarAction(driver, params.checkData.grammar)
     if (!resultGrammarAction) {
       await driver.quit()
     }
     expect(resultGrammarAction).toBeTruthy()
 
-    const resultUserAction = await alph.checkToolbarUserAction(driver)
+    const resultUserAction = await alph.checkToolbarUserAction(driver, params.checkData.user)
     if (!resultUserAction) {
       await driver.quit()
     }
     expect(resultUserAction).toBeTruthy()
 
-    const resultUserOptions = await alph.checkToolbarOptionsAction(driver)
+    const resultUserOptions = await alph.checkToolbarOptionsAction(driver, params.checkData.options)
     if (!resultUserOptions) {
       await driver.quit()
     }

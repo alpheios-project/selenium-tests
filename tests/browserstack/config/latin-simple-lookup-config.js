@@ -3,8 +3,11 @@ module.exports = {
   testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
     browserName: 'firefox',
-    // browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
+    // browserVersions: ['68.0', '67.0', '66.0', '65.0', '64.0', '63.0', '62.0'],
+    // browserVersions: ['75.0', '74.0', '73.0', '72.0', '71.0', '70.0', '69.0'],
+    // "minBrowserVersion": "76",
+    // osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
+    osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
     timeout: 28000
   },
   lookupData: [
@@ -13,7 +16,7 @@ module.exports = {
         word: 'beatum',
       },
       checkData: {
-        text: ['beatus , beata', 'beatus beata beatum', 'blessed, blissful; "Saint" (in early Church, less formal);'],
+        text: ['happy, fortunate, bringing happiness rich', 'blessed, blissful; "Saint" (in early Church, less formal);'],
         checkInflections: false
       }
     },

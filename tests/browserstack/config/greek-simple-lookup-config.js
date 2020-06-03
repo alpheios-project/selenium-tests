@@ -2,10 +2,11 @@ module.exports = {
   // testUrl: 'https://texts.alpheios.net',
   testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
-    browserName: 'firefox',
-    browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
+    browserName: 'safari',
+    // browserVersions: ['65.0'],
+    osVersions: [{ 'os' : 'OS X', 'os_version' : 'High Sierra' }]
   },
+  timeout: 12000,
   lookupData: {
     clickData: {
       word: 'ἀγαθός',

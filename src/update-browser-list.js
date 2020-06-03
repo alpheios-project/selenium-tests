@@ -4,6 +4,7 @@ const config = require('./main-config.json')
 const osVersions = [
   { 'os' : 'Windows', 'os_version' : '10' },
   { 'os' : 'Windows', 'os_version' : '8.1' },
+  { 'os' : 'OS X', 'os_version' : 'Catalina'},
   { 'os' : 'OS X', 'os_version' : 'High Sierra'},
   { 'os' : 'OS X', 'os_version' : 'Sierra'},
   { 'os' : 'OS X', 'os_version' : 'El Capitan'},
