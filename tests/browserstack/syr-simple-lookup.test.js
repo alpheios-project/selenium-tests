@@ -1,6 +1,6 @@
 
-describe('gez-simple-lookup.test.js', () => {
-  const config = require('./config/gez-simple-lookup-config.js')
+describe('syr-simple-lookup.test.js', () => {
+  const config = require('./config/syr-simple-lookup-config.js')
   const alph_tests = require('../../src/alph-selenium-test-cases')
   const configurator = require('../../src/alph-config')
   const versions = configurator.versions(config.env)
@@ -9,15 +9,15 @@ describe('gez-simple-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
+  console.info('versions - ', versions)
   versions.forEach(version => {
-    it(`should execute simple (gez) lookup - ${version.name}`, async () => {
+    it(`should execute simple (syr) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
-        capabilities: Object.assign(version, { buildName: 'Simple (gez) lookup' } ),
+        capabilities: Object.assign(version, { buildName: 'Simple (syr) lookup' } ),
         url: testUrl,
         lookupData: config.lookupData,
-        lang: 'Ancient Ethiopic (Ge\'ez)',
-        checkInflections: false,
-        buildName: 'Simple (gez) lookup'
+        lang: 'Syriac',
+        checkInflections: false
       })
     }, 50000000)
   })
