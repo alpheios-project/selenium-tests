@@ -9,7 +9,6 @@ describe('syr-simple-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
-  console.info('versions - ', versions)
   versions.forEach(version => {
     it(`should execute simple (syr) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
