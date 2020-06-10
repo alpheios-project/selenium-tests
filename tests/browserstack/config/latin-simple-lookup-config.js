@@ -4,10 +4,10 @@ module.exports = {
   env: {
     browserName: 'firefox',
     // browserVersions: ['68.0', '67.0', '66.0', '65.0', '64.0', '63.0', '62.0'],
-    // browserVersions: ['75.0', '74.0', '73.0', '72.0', '71.0', '70.0', '69.0'],
+    browserVersions: ['75.0'],
     // "minBrowserVersion": "76",
-    // osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
-    osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
+    osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
+    // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
     timeout: 28000
   },
   lookupData: [

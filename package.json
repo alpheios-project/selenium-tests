@@ -20,8 +20,9 @@
     "test-per-simple-lookup": "jest tests/browserstack/per-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-gez-simple-lookup": "jest tests/browserstack/gez-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-syr-simple-lookup": "jest tests/browserstack/syr-simple-lookup.test.js --env=node --maxConcurrency=2",
+    "test-zho-simple-lookup": "jest tests/browserstack/zho-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-latin-no-result-lookup": "jest tests/browserstack/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
-    "test-dblclick-lookup": "jest tests/browserstack/dblclick-lookup.test.js --env=node --maxConcurrency=2",
+    "test-click-lookup": "jest tests/browserstack/click-lookup.test.js --env=node --maxConcurrency=2",
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-manual": "jest tests/manual-tests/* --env=node",
     "update-browsers": "node src/update-browser-list.js"

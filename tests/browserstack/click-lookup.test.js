@@ -1,5 +1,5 @@
 
-describe('latin-click-lookup.test.js', () => {
+describe('click-lookup.test.js', () => {
   const config = require('./config/click-lookup-config.js')
   const alph_tests = require('../../src/alph-selenium-test-cases')
   const configurator = require('../../src/alph-config')

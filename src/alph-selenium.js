@@ -188,6 +188,12 @@ module.exports = {
     return false
   },
 
+  async lookupWordReload(driver) {
+    const lookupBlock = await this.getLookupBlock(driver)
+    const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
+    await lookupFormButtonToolbar.click()
+  },
+
   async lookupWord (driver, clickData, lang, needActivation = true) {
     let resChangeLang = true
     let lookupBlock
@@ -256,7 +262,7 @@ module.exports = {
 
     if (hasCorrectTargetWord) {
       if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
-
+      
       let sourcePopupText = await popupContent.getText()
       sourcePopupText = sourcePopupText.replace(/\s{2,}/g, ' ').trim()
 
@@ -273,10 +279,28 @@ module.exports = {
     }
   },
 
+  async doChineseLoadedCheck (driver) {
+    let popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
+    let sourcePopupText = await popup.getText()
+
+    const checkTextNotLoaded = 'Chinese data has not been loaded yet. Do you want to load it?'
+    if (sourcePopupText.includes(checkTextNotLoaded)) {
+      const loadChineseButton = await popup.findElement(By.css('.alpheios-button.alpheios-notification-area__hint-btn')) 
+      await loadChineseButton.click()
+
+      const cedictLoadedHint = await driver.wait(until.elementLocated(By.className('alpheios-notification-area__notification--cedict-loaded')), timeoutG * 25);
+
+      await this.checkAndClosePopup(driver)
+      return true
+    }
+    return false
+  },
+
   checkTextFromPopup (sourcePopupText, text) {
     let finalLexemeCheck = false
 
     finalLexemeCheck = sourcePopupText.includes(text)
+
     if (!finalLexemeCheck) {
       let removePunctuation = [',', ';']
 

@@ -13,7 +13,7 @@ module.exports = {
       },
       checkData: {
         targetWord: 'fero',
-        text: 'ferus fera ferum'
+        text: 'ferus: wild, savage; uncivilized; untamed; fierce;'
       }
     },
     {
@@ -50,6 +50,24 @@ module.exports = {
       checkData: {
         targetWord: 'እግዚአብሔር',
         text: ['common noun', 'dominus, universi, Dei']
+      }
+    },
+    {
+      clickData: {
+        path: '#syr-text-1'
+      },
+      checkData: {
+        targetWord: 'ܩܒܠܼܬܘܢ',
+        text: ['to persuade', 'to speek', 'to say']
+      }
+    },
+    {
+      clickData: {
+        path: '#zho-text-shui'
+      },
+      checkData: {
+        targetWord: '說',
+        text: ['to appeal to', 'to meet', 'be present']
       }
     }
     
