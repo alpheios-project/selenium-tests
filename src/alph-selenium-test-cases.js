@@ -21,9 +21,18 @@ module.exports = {
       for(let i=0; i<params.lookupData.length; i++) {
         let lookupData = params.lookupData[i]
         await alph.lookupWord(driver, lookupData.clickData, params.lang, i === 0)
+        let reload = false
+
+        if (params.chineseLoadedCheck) {
+          reload = await alph.doChineseLoadedCheck(driver)
+        }
+
+        if (reload) {
+          await alph.lookupWordReload(driver)
+        }
 
         if (lookupData.checkData.text) {
-          await alph.checkLexemeData(driver, lookupData.checkData)
+          await alph.checkLexemeData(driver, lookupData.checkData, params.chineseLoadedCheck)
         }
 
         if (lookupData.checkData.checkInflections) {
@@ -54,7 +63,18 @@ module.exports = {
         let lookupData = params.lookupData[i]
         const clickResult = await alph.clickLookupWord(driver, lookupData.clickData, params.lang)
 
+        let reload = false
+
+        if (params.chineseLoadedCheck) {
+          reload = await alph.doChineseLoadedCheck(driver)
+        }
+
+        if (reload) {
+          const clickResult = await alph.clickLookupWord(driver, lookupData.clickData, params.lang)
+        }
+
         if (clickResult && lookupData.checkData.text) {
+
           await alph.checkLexemeData(driver, lookupData.checkData)
         }
 
