@@ -301,9 +301,6 @@ module.exports = {
 
     finalLexemeCheck = sourcePopupText.includes(text)
 
-    console.info('check 1 - finalLexemeCheck', finalLexemeCheck)
-    console.info('check 1 - text', text)
-    console.info('check 1 - sourcePopupText', sourcePopupText)
     if (!finalLexemeCheck) {
       let removePunctuation = [',', ';']
 
