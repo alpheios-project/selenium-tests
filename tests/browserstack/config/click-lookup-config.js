@@ -6,7 +6,7 @@ module.exports = {
     browserVersions: ['72.0'],
     osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
   },
-  lookupData: [
+  lookupData: [/*
     {
       clickData: {
         path: '#latin-text-fero'
@@ -57,10 +57,10 @@ module.exports = {
         path: '#syr-text-1'
       },
       checkData: {
-        targetWord: 'ܩܒܠܼܬܘܢ',
-        text: ['to persuade', 'to speek', 'to say']
+        targetWord: 'ܠܗܘܢ',
+        text: ['twelfth letter of the alphabet (Lomadh)', 'numerical value: 30', 'temps']
       }
-    },
+    },*/
     {
       clickData: {
         path: '#zho-text-shui'
