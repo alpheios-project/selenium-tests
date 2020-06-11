@@ -50,7 +50,10 @@ module.exports = {
       })
 
       const timeout = envItem.timeout ? envItem.timeout : config.timeout
-      localVersions.forEach(version => { version.timeout = timeout })
+      localVersions.forEach(version => { 
+        version.timeout = timeout 
+        version['browserstack.console'] = envItem['browserstack.console'] 
+      })
 
       finalVersions = finalVersions.concat(localVersions)
     })

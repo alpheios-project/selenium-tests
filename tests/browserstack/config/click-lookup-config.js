@@ -4,7 +4,8 @@ module.exports = {
   env: {
     browserName: 'firefox',
     browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }]
+    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
+    'browserstack.console': 'errors'
   },
   lookupData: [/*
     {
