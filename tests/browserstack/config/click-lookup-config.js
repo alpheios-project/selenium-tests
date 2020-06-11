@@ -7,7 +7,7 @@ module.exports = {
     osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
     'browserstack.console': 'errors'
   },
-  lookupData: [/*
+  lookupData: [
     {
       clickData: {
         path: '#latin-text-fero'
@@ -61,7 +61,18 @@ module.exports = {
         targetWord: 'ܠܗܘܢ',
         text: ['twelfth letter of the alphabet (Lomadh)', 'numerical value: 30', 'temps']
       }
-    },*/
+    },
+    {
+      clickData: {
+        path: '#per-text-1'
+      },
+      checkData: {
+        targetWord: 'گمان',
+        text: ['Doubt, suspicion, surmise;']
+      }
+    }
+    
+    /*,
     {
       clickData: {
         path: '#zho-text-shui'
@@ -70,7 +81,7 @@ module.exports = {
         targetWord: '說',
         text: ['to appeal to', 'to meet', 'be present']
       }
-    }
+    }*/
     
   ]
 }

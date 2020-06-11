@@ -9,11 +9,11 @@ describe('click-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
-  console.info('versions', versions)
+  // console.info('versions', versions)
   versions.forEach(version => {
     it(`should execute click lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { buildName: 'Click lookup' } )
-      console.info('capabilities - ', capabilities)
+      // console.info('capabilities - ', capabilities)
       await alph_tests.clickLookupTest({
         capabilities,
         url: testUrl,
