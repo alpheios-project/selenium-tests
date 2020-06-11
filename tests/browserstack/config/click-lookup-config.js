@@ -70,9 +70,7 @@ module.exports = {
         targetWord: 'እግዚአብሔር',
         text: ['common noun', 'dominus, universi, Dei']
       }
-    }
-    
-    /*,
+    },
     {
       clickData: {
         path: '#zho-text-shui'
@@ -81,7 +79,7 @@ module.exports = {
         targetWord: '說',
         text: ['to appeal to', 'to meet', 'be present']
       }
-    }*/
+    }
     
   ]
 }
