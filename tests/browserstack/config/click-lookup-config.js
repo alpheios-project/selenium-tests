@@ -2,9 +2,9 @@ module.exports = {
   // testUrl: 'https://texts.alpheios.net/text/urn:cts:latinLit:phi0893.phi002.perseus-lat2/passage/1-30',
   testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
-    browserName: 'firefox',
-    browserVersions: ['72.0'],
-    osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
+    browserName: 'safari',
+    // browserVersions: ['63.0'],
+    osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
     'browserstack.console': 'errors'
   },
   lookupData: [
@@ -46,15 +46,6 @@ module.exports = {
     },
     {
       clickData: {
-        path: '#gez-text-igizi'
-      },
-      checkData: {
-        targetWord: 'እግዚአብሔር',
-        text: ['common noun', 'dominus, universi, Dei']
-      }
-    },
-    {
-      clickData: {
         path: '#syr-text-1'
       },
       checkData: {
@@ -69,6 +60,15 @@ module.exports = {
       checkData: {
         targetWord: 'گمان',
         text: ['Doubt, suspicion, surmise;']
+      }
+    },
+    {
+      clickData: {
+        path: '#gez-text-igizi'
+      },
+      checkData: {
+        targetWord: 'እግዚአብሔር',
+        text: ['common noun', 'dominus, universi, Dei']
       }
     }
     
