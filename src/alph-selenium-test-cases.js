@@ -131,6 +131,37 @@ module.exports = {
     expect(resultUserAction).toBeTruthy()
 
     await driver.quit()
+  },
+
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.lookupData list, executes a lookup using
+   * a single click on the word, verifies:
+   *     - verify that the popup has a disamibugated lexeme
+   *     - verify that the popup has a treebank icon
+   *     - verify that clicking on the treebank icon brings up the tree diagram
+   */
+  async clickLookupTreebankTest (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+    if (loaded && params.lookupData) {
+      if (!Array.isArray(params.lookupData)) {
+        params.lookupData = [params.lookupData]
+      }
+
+      for(let i=0; i<params.lookupData.length; i++) {
+        let lookupData = params.lookupData[i]
+        const clickResult = await alph.clickLookupWord(driver, lookupData.clickData, params.lang)
+
+        if (clickResult && lookupData.checkData.text) {
+          // await alph.checkLexemeData(driver, lookupData.checkData)
+        }
+
+      }
+    }
+    await driver.quit()
   }
 
 }

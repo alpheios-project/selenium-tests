@@ -23,6 +23,7 @@
     "test-zho-simple-lookup": "jest tests/browserstack/zho-simple-lookup.test.js --env=node --maxConcurrency=2",
     "test-latin-no-result-lookup": "jest tests/browserstack/latin-no-result-lookup.test.js --env=node --maxConcurrency=2",
     "test-click-lookup": "jest tests/browserstack/click-lookup.test.js --env=node --maxConcurrency=2",
+    "test-click-lookup-treebank": "jest tests/browserstack/click-lookup-treebank.test.js --env=node --maxConcurrency=2",
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-manual": "jest tests/manual-tests/* --env=node",
     "update-browsers": "node src/update-browser-list.js"
