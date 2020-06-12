@@ -3,7 +3,7 @@ module.exports = {
     testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
     env: {
       browserName: 'firefox',
-      browserVersions: ['76.0'],
+      // browserVersions: ['76.0'],
       // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
       osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
       'browserstack.console': 'errors'

@@ -147,6 +147,8 @@ module.exports = {
 
     expect(loaded).toBeTruthy()
     if (loaded && params.lookupData) {
+      driver.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+
       if (!Array.isArray(params.lookupData)) {
         params.lookupData = [params.lookupData]
       }
@@ -155,8 +157,9 @@ module.exports = {
         let lookupData = params.lookupData[i]
         const clickResult = await alph.clickLookupWord(driver, lookupData.clickData, params.lang)
 
-        if (clickResult && lookupData.checkData.text) {
-          // await alph.checkLexemeData(driver, lookupData.checkData)
+        if (clickResult) {
+          await alph.checkHasDisambiguated(driver)
+          await alph.checkHasTreebankTab(driver)
         }
 
       }
