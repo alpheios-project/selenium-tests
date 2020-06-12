@@ -425,7 +425,47 @@ module.exports = {
     const panelText = await panel.getText()
 
     return checkText.every(text => panelText.includes(text))
-  }
+  },
+
+  async checkHasDisambiguated (driver) {
+    const popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
+    const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-popup__content')), timeoutG * 4);
+    const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph__dictentry')), timeoutG * 4);
+
+    const disambiguatedIcon = await popupContent.findElement(By.css('.alpheios-disambiguated-icon'));
+    const disambiguatedIconDisplayed = await disambiguatedIcon.isDisplayed()
+
+    expect(disambiguatedIconDisplayed).toBeTruthy()
+
+    const treebankdIcon = await popupContent.findElement(By.css('.alpheios-treebank-icon'));
+    const treebankdIconDisplayed = await treebankdIcon.isDisplayed()
+
+    expect(treebankdIconDisplayed).toBeTruthy()
+  },
+
+  async checkHasTreebankTab (driver) {
+    const popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
+    const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-popup__content')), timeoutG * 4);
+    const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph__dictentry')), timeoutG * 4);
+
+    const treebankIcon = await driver.wait(until.elementLocated(By.id('alpheios-popup-toolbar-btn-treebank')), timeoutG * 4)
+
+    const treebankIconDisplayed = await treebankIcon.isDisplayed()
+
+    expect(treebankIconDisplayed).toBeTruthy()
+
+    if (treebankIconDisplayed) {
+      await treebankIcon.click()
+
+      const panel =
+        await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+      
+      const treebankIframe = await driver.findElement(By.id('alpheios-treebank-frame'))
+      const treebankIframeDisplayed = await treebankIframe.isDisplayed()
+
+      expect(treebankIframeDisplayed).toBeTruthy()
+    }
+  },
 
 
 }
