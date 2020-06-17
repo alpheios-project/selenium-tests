@@ -6,9 +6,10 @@ module.exports = {
    * @param {Object} params contains test parameters
    * For each item in the params.lookupData list, executes a lookup using the
    * lookup box, verifies lexeme data and  whether or not there are inflections
+   * on desktop platforms
    */
   async simpleLookupTest (params) {
-    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'desktop')
     const loaded = await alph.firstPageLoad(driver, params.url)
 
     expect(loaded).toBeTruthy()
@@ -41,6 +42,33 @@ module.exports = {
       }
     }
     await driver.quit()
+  },
+
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.lookupData list, executes a lookup using the
+   * lookup box, verifies lexeme data and  whether or not there are inflections
+   * on mobile platforms
+   */
+  async simpleMobileLookupTest (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'mobile')
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+
+    if (loaded && params.lookupData) {
+
+      if (!Array.isArray(params.lookupData)) {
+        params.lookupData = [params.lookupData]
+      }
+
+      for(let i=0; i<params.lookupData.length; i++) {
+        let lookupData = params.lookupData[i]
+
+        await alph.lookupWordMobile(driver, lookupData.clickData, params.lang, i === 0)
+      }
+
+    }
   },
 
   /**

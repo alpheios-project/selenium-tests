@@ -1,13 +1,13 @@
 const axios = require('axios')
 const config = require('./main-config.json')
 
+const finalJson = 'src/desktop-browsers-list.json'
+
 const osVersions = [
   { 'os' : 'Windows', 'os_version' : '10' },
   { 'os' : 'Windows', 'os_version' : '8.1' },
   { 'os' : 'OS X', 'os_version' : 'Catalina'},
   { 'os' : 'OS X', 'os_version' : 'High Sierra'},
-  { 'os' : 'OS X', 'os_version' : 'Sierra'},
-  { 'os' : 'OS X', 'os_version' : 'El Capitan'},
   { 'os' : 'OS X', 'os_version' : 'Mojave'},
   { 'os' : 'OS X', 'os_version' : 'Yosemite'}
 ]
@@ -53,7 +53,7 @@ const saveJSONToFile = (data) => {
   const fs = require('fs')
   const json = JSON.stringify(data)
   
-  fs.writeFile('src/browsers-list.json', json, 'utf8', () => { console.info('Finished') })
+  fs.writeFile(finalJson, json, 'utf8', () => { console.info('Finished') })
 }
 
 const getBrowsers = async () => {

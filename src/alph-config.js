@@ -13,15 +13,16 @@ module.exports = {
     return testUrl
   },
 
-  versions (env) {
+  versions (env, type = 'desktop') {
     if (!env) {
-      env = config.env
+      env = config.env[type]
     }
 
-    let allVersions = require('./browsers-list.json')
+    let allVersions = (type === 'desktop') ? require('./desktop-browsers-list.json') : require('./mobile-browsers-list.json')
 
     let finalVersions = []
     if (!Array.isArray(env)) { env = [env]}
+    // console.info('env', env)
 
     env.forEach(envItem => {
       let minBrowserVersion
@@ -46,6 +47,17 @@ module.exports = {
         if (envItem.osVersions) {
           result = result && envItem.osVersions.some(envOsVer => envOsVer.os === version.os && envOsVer['os_version'] === version['os_version'])
         }
+
+        if (envItem.device) {
+          if (!Array.isArray(envItem.device)) { envItem.device = [envItem.device] }
+          result = result && envItem.device.some(device => device === version.device || version.device.includes(device))
+        }
+
+        if (envItem.device_browser) {
+          if (!Array.isArray(envItem.device_browser)) { envItem.device_browser = [envItem.device_browser] }
+          result = result && envItem.device_browser.some(device_browser => device_browser === version.device_browser || version.device_browser.includes(device_browser))
+        }
+
         return result
       })
 

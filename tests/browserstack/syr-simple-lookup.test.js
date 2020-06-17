@@ -3,7 +3,7 @@ describe('syr-simple-lookup.test.js', () => {
   const config = require('./config/syr-simple-lookup-config.js')
   const alph_tests = require('../../src/alph-selenium-test-cases')
   const configurator = require('../../src/alph-config')
-  const versions = configurator.versions(config.env)
+  const versions = configurator.versions(config.env, 'desktop')
   const testUrl = configurator.testUrl(config)
 
   beforeEach(() => {})
