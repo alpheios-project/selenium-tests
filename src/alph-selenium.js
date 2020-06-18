@@ -60,7 +60,7 @@ module.exports = {
       .build()
 
     if (type === 'desktop') {
-      console.info('defineDriver - inside')
+      // console.info('defineDriver - inside')
       driver.manage().window().maximize()
     }
 
@@ -353,6 +353,47 @@ module.exports = {
     }
   },
 
+  async checkLexemeDataMobile (driver, checkData) {
+    const popup = await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4);
+
+    const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-panel__content')), timeoutG * 4);
+
+    try {
+      const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph-definitions_list__definition')), timeoutG * 4);
+      const popupDictentry_text = await popupDictentry.getText()
+      console.info('popupDictentry_text - ', popupDictentry_text)
+    } catch (e) {
+      console.error(e)
+    }
+
+    const popupSelection = await driver.wait(until.elementLocated(By.id('alpheios-panel__lex-data-container')), timeoutG * 4);
+    const popupSelection_isDisplayed = await popupSelection.isDisplayed()
+
+    let popup_text
+    console.info('popup_text - 1', popupSelection_isDisplayed)
+    if (popupSelection_isDisplayed) {
+      popup_text = await popupSelection.getText()
+      console.info('popup_text - 1', popup_text)
+    } else {
+      const popupSelectionDefs = await driver.wait(until.elementLocated(By.className('alpheios-panel__tab-panel')), timeoutG * 4);
+      popup_text = await popupSelectionDefs.getText()
+      console.info('popup_text - 2', popup_text)
+    }
+
+    if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
+
+    checkData.text.forEach(text => {
+      const result = this.checkTextFromPopup(popup_text, text)
+
+      if (!result.finalLexemeCheck) {
+        console.error(`Check text - "${result.text}", was not found in the source - "${popup_text}"`)
+      } else {
+        console.info(`Check text - "${result.text}", was found in the source`)
+      }
+      expect(result.finalLexemeCheck).toBeTruthy()
+    })
+  },
+
   async doChineseLoadedCheck (driver) {
     let popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
     let sourcePopupText = await popup.getText()
@@ -373,6 +414,7 @@ module.exports = {
   checkTextFromPopup (sourcePopupText, text) {
     let finalLexemeCheck = false
 
+    // console.info('checkTextFromPopup - ', sourcePopupText.includes(text), text, sourcePopupText)
     finalLexemeCheck = sourcePopupText.includes(text)
 
     if (!finalLexemeCheck) {

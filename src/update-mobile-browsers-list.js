@@ -30,7 +30,9 @@ const filterBrowsersData = (allVersions) => {
     'Motorola': ['chrome', 'firefox'],
     'Xiaomi': ['chrome', 'firefox'],
     'LG': ['chrome', 'firefox'],
-    'Xperia': ['chrome', 'firefox']
+    'Xperia': ['chrome', 'firefox'],
+    'iPhone': ['chrome', 'safari'],
+    'iPad': ['chrome', 'safari']
   }
 
   let finalVersions = []

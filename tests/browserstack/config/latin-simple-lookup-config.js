@@ -23,7 +23,10 @@ module.exports = {
       // device: ['Google Pixel 2', 'Google Pixel XL', 'Google Nexus'],
       // device: ['OnePlus'],
       // device: ['Moto'],
-      device: ['Xiaomi', 'LG', 'Xperia'],
+      // device: ['Xiaomi', 'LG', 'Xperia'],
+      device: ['iPhone 11'],
+      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
+      device_browser: 'safari',
       realMobile: true
     }
   },
