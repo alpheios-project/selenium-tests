@@ -46,7 +46,7 @@ module.exports = {
     })
   },
 
-  async defineDriver (capabilities, creds, timeout) {
+  async defineDriver (capabilities, creds, timeout, type = 'desktop') {
     let capabilitiesCurrent = Object.assign(basicCapabilities, capabilities)
 
     capabilitiesCurrent = Object.assign(capabilitiesCurrent, {
@@ -58,7 +58,11 @@ module.exports = {
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)
       .build()
-    driver.manage().window().maximize()
+
+    if (type === 'desktop') {
+      // console.info('defineDriver - inside')
+      driver.manage().window().maximize()
+    }
 
     const sessionData = await driver.getSession()
     expect(sessionData.id_).not.toBeNull()
@@ -78,10 +82,10 @@ module.exports = {
   },
 
   async firstPageLoad (driver, url) {
-    this.goToUrl(driver, url)
+    await this.goToUrl(driver, url)
     let loaded = true
     try {
-      await this.checkAlpehiosLoaded(driver)
+      await this.checkAlpehiosLoaded(driver) 
     } catch (err) {
       loaded = false
     }
@@ -95,9 +99,23 @@ module.exports = {
     const lookupIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-lookup'))
     await lookupIconToolbar.click()
 
-    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2);
+    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2)
     
     const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input__toolbar'))
+
+    return { form: lookupFormToolbar, input: lookupInputToolbar }
+  },
+
+  async activateLookupMobile (driver) {
+    const toolbar =
+      await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+    await toolbar.click()
+
+    const lookupFormToolbar =  await driver.wait(until.elementLocated(By.id('alpheios-lookup-form')), timeoutG * 2)
+
+    const lookupFormToolbarIsDisplayed = await lookupFormToolbar.isDisplayed()
+
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input__action-panel'))
 
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
@@ -107,9 +125,23 @@ module.exports = {
     const displayedPanel = await panel.isDisplayed()
 
     if (displayedPanel) {
-      const panelHeader = await panel.findElement(By.id('alpheios-panel-header'))
+      const panelHeader = await panel.findElement(By.css('.alpheios-panel-header'))
 
-      const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel-close-btn'))
+      const panelCloseButton = await panelHeader.findElement(By.css('.alpheios-panel-close-btn'))
+
+      await panelCloseButton.click()
+      await driver.wait(until.elementIsNotVisible(panel), timeoutG * 2)
+    }
+  },
+
+  async checkAndClosePanelMobile (driver) {
+    const panel = await driver.findElement(By.id('alpheios-panel-inner'))
+    const displayedPanel = await panel.isDisplayed()
+
+    if (displayedPanel) {
+      const panelHeader = await panel.findElement(By.id('alpheios-panel__header'))
+
+      const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel__close-btn'))
 
       await panelCloseButton.click()
       await driver.wait(until.elementIsNotVisible(panel), timeoutG * 2)
@@ -143,10 +175,23 @@ module.exports = {
     return { form: lookupFormToolbar, input: lookupInputToolbar }
   },
 
+  async getLookupBlockMobile (driver) {
+    const lookupFormToolbar = await driver.findElement(By.id('alpheios-lookup-form'))
+    const lookupInputToolbar = await lookupFormToolbar.findElement(By.id('alpheios-lookup-form-input__action-panel'))
+
+    let checkDisplayed = await lookupInputToolbar.isDisplayed()
+    if (!checkDisplayed) {
+      await this.checkAndClosePanelMobile(driver)
+    }
+    checkDisplayed = await lookupInputToolbar.isDisplayed()
+    return { form: lookupFormToolbar, input: lookupInputToolbar }
+  },
+
   async checkLanguageInLookup (driver, form, lang) {
     const langHint = await form.findElement(By.id('alpheios-lookup-form-lang-hint'))
     let langHint_text = await langHint.getText()
     langHint_text = langHint_text.replace('(', '').replace(')', '')
+
     return langHint_text === lang
   },
 
@@ -214,9 +259,38 @@ module.exports = {
     if (resChangeLang) {
       await lookupBlock.input.click()
       await lookupBlock.input.sendKeys(clickData.word)
+      await lookupBlock.input.sendKeys(Key.RETURN)
 
+      // const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
+      // await lookupFormButtonToolbar.click()
+    }
+  },
+
+  async lookupWordMobile (driver, clickData, lang, needActivation = true) {
+    let resChangeLang = true
+    let lookupBlock
+
+    if (needActivation) {
+      lookupBlock = await this.activateLookupMobile(driver)
+      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+
+      if (!resLangCheck) {
+        resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+      }
+
+      expect(resChangeLang).toBeTruthy()
+    } else {
+      lookupBlock = await this.getLookupBlockMobile(driver)
+    }
+
+    if (resChangeLang) {
+      await lookupBlock.input.click()
+      await lookupBlock.input.sendKeys(clickData.word)
+      await lookupBlock.input.sendKeys(Key.RETURN)
+      /*
       const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
       await lookupFormButtonToolbar.click()
+      */
     }
   },
 
@@ -279,6 +353,47 @@ module.exports = {
     }
   },
 
+  async checkLexemeDataMobile (driver, checkData) {
+    const popup = await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4);
+
+    const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-panel__content')), timeoutG * 4);
+
+    try {
+      const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph-definitions_list__definition')), timeoutG * 4);
+      const popupDictentry_text = await popupDictentry.getText()
+      console.info('popupDictentry_text - ', popupDictentry_text)
+    } catch (e) {
+      console.error(e)
+    }
+
+    const popupSelection = await driver.wait(until.elementLocated(By.id('alpheios-panel__lex-data-container')), timeoutG * 4);
+    const popupSelection_isDisplayed = await popupSelection.isDisplayed()
+
+    let popup_text
+    console.info('popup_text - 1', popupSelection_isDisplayed)
+    if (popupSelection_isDisplayed) {
+      popup_text = await popupSelection.getText()
+      console.info('popup_text - 1', popup_text)
+    } else {
+      const popupSelectionDefs = await driver.wait(until.elementLocated(By.className('alpheios-panel__tab-panel')), timeoutG * 4);
+      popup_text = await popupSelectionDefs.getText()
+      console.info('popup_text - 2', popup_text)
+    }
+
+    if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
+
+    checkData.text.forEach(text => {
+      const result = this.checkTextFromPopup(popup_text, text)
+
+      if (!result.finalLexemeCheck) {
+        console.error(`Check text - "${result.text}", was not found in the source - "${popup_text}"`)
+      } else {
+        console.info(`Check text - "${result.text}", was found in the source`)
+      }
+      expect(result.finalLexemeCheck).toBeTruthy()
+    })
+  },
+
   async doChineseLoadedCheck (driver) {
     let popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
     let sourcePopupText = await popup.getText()
@@ -299,6 +414,7 @@ module.exports = {
   checkTextFromPopup (sourcePopupText, text) {
     let finalLexemeCheck = false
 
+    // console.info('checkTextFromPopup - ', sourcePopupText.includes(text), text, sourcePopupText)
     finalLexemeCheck = sourcePopupText.includes(text)
 
     if (!finalLexemeCheck) {

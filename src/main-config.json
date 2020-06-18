@@ -3,22 +3,27 @@
     "username": "bsuser62225",
     "password": "azupMxLR1XptWppiEpeD"
   },
-  "env": [
-    {
-      "browserName": "chrome",
-      "minBrowserVersion": "76",
-      "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
-    },
-    {
-      "browserName": "safari",
-      "minBrowserVersion": "11",
-      "timeout": 10000
-    },
-    {
-      "browserName": "firefox",
-      "minBrowserVersion": "70",
-      "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
-    }
-   ],
+  "env": {
+    "desktop": [
+      {
+        "browserName": "chrome",
+        "minBrowserVersion": "76",
+        "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
+      },
+      {
+        "browserName": "safari",
+        "minBrowserVersion": "11",
+        "timeout": 10000
+      },
+      {
+        "browserName": "firefox",
+        "minBrowserVersion": "70",
+        "osVersions": [{ "os" : "Windows", "os_version" : "10" }, { "os" : "Windows", "os_version" : "8.1" }]
+      }
+    ],
+    "mobile": [
+
+    ]
+  },
   "timeout": 6000
 }

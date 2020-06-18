@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "appium": "^1.17.1",
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "jest": "^25.5.4",
@@ -26,7 +27,8 @@
     "test-click-lookup-treebank": "jest tests/browserstack/click-lookup-treebank.test.js --env=node --maxConcurrency=2",
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-manual": "jest tests/manual-tests/* --env=node",
-    "update-browsers": "node src/update-browser-list.js"
+    "update-desktop-browsers": "node src/update-desktop-browser-list.js",
+    "update-mobile-browsers": "node src/update-mobile-browsers-list.js"
   },
   "author": "",
   "license": "ISC",
