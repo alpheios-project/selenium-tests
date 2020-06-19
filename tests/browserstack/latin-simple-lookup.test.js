@@ -1,12 +1,12 @@
 
 describe('latin-simple-lookup.test.js', () => {
   const {webdriver, Builder, By, Key, until} = require('selenium-webdriver')
-  const config = require('./config/latin-simple-lookup-config.js')
-  const alph_tests = require('../../src/alph-selenium-test-cases')
-  const configurator = require('../../src/alph-config')
+  const config = require('@tests/browserstack/config/latin-simple-lookup-config.js')
+  const alph_tests = require('@src/alph-selenium-test-cases')
+  const configurator = require('@src/alph-config')
 
-  const alph = require('../../src/alph-selenium')
-  const configMain = require('../../src/main-config.json')
+  const alph = require('@src/alph-selenium')
+  const configMain = require('@src/main-config.json')
 
   const versionsDesktop = configurator.versions(config.env.desktop, 'desktop')
   const versionsMobile = configurator.versions(config.env.mobile, 'mobile')
@@ -20,7 +20,7 @@ describe('latin-simple-lookup.test.js', () => {
   console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
 
   versionsDesktop.forEach(version => {
-    it.skip(`should execute simple (latin) lookup - ${version.name}`, async () => {
+    it(`should execute simple (latin) lookup - ${version.name}`, async () => {
       console.info('version - ', `${version.browser} ${version.browser_version} ${version.os} ${version.os_version}`)
       // console.info('testUrl - ', testUrl)
       

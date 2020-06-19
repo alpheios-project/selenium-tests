@@ -67,6 +67,15 @@ module.exports = {
         let lookupData = params.lookupData[i]
 
         await alph.lookupWordMobile(driver, lookupData.clickData, params.lang, i === 0)
+        let reload = false
+
+        if (params.chineseLoadedCheck) {
+          reload = await alph.doChineseLoadedCheckMobile(driver)
+        }
+
+        if (reload) {
+          await alph.lookupWordReloadMobile(driver)
+        }
 
         if (lookupData.checkData.text) {
           await alph.checkLexemeDataMobile(driver, lookupData.checkData, params.chineseLoadedCheck)
@@ -126,6 +135,8 @@ module.exports = {
    * - toolbar grammar icon
    * - toolbar user icon
    * - toolbar options icon
+   * 
+   * on desktop
    */
   async simpleInitialActionsTest (params) {
     const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
@@ -166,6 +177,50 @@ module.exports = {
     await driver.quit()
   },
 
+
+  /**
+   * @param {Object} params contains test parameters
+   * Tests clicks on:
+   * - toolbar help icon
+   * - toolbar grammar icon
+   * - toolbar user icon
+   * - toolbar options icon
+   * 
+   * on mobile
+   */
+  async simpleInitialActionsMobileTest (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+
+    const resultInflBrowserAction = await alph.checkToolbarInflBrowserAction(driver, params.checkData.inflBrowser)
+    if (!resultInflBrowserAction) {
+      await driver.quit()
+    }
+    expect(resultInflBrowserAction).toBeTruthy()
+/*
+    const resultGrammarAction = await alph.checkToolbarGrammarAction(driver, params.checkData.grammar)
+    if (!resultGrammarAction) {
+      await driver.quit()
+    }
+    expect(resultGrammarAction).toBeTruthy()
+
+    const resultUserAction = await alph.checkToolbarUserAction(driver, params.checkData.user)
+    if (!resultUserAction) {
+      await driver.quit()
+    }
+    expect(resultUserAction).toBeTruthy()
+
+    const resultUserOptions = await alph.checkToolbarOptionsAction(driver, params.checkData.options)
+    if (!resultUserOptions) {
+      await driver.quit()
+    }
+    expect(resultUserAction).toBeTruthy()
+*/
+    await driver.quit()
+  },
+  
   /**
    * @param {Object} params contains test parameters
    * For each item in the params.lookupData list, executes a lookup using
@@ -199,5 +254,4 @@ module.exports = {
     }
     await driver.quit()
   }
-
 }

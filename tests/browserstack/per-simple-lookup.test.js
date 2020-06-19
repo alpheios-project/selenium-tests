@@ -1,12 +1,12 @@
 
 describe('per-simple-lookup.test.js', () => {
   const {webdriver, Builder, By, Key, until} = require('selenium-webdriver')
-  const config = require('./config/per-simple-lookup-config.js')
-  const alph_tests = require('../../src/alph-selenium-test-cases')
-  const configurator = require('../../src/alph-config')
+  const config = require('@tests/browserstack/config/per-simple-lookup-config.js')
+  const alph_tests = require('@src/alph-selenium-test-cases')
+  const configurator = require('@src/alph-config')
 
-  const alph = require('../../src/alph-selenium')
-  const configMain = require('../../src/main-config.json')
+  const alph = require('@src/alph-selenium')
+  const configMain = require('@src/main-config.json')
 
   const versionsDesktop = configurator.versions(config.env.desktop, 'desktop')
   const versionsMobile = configurator.versions(config.env.mobile, 'mobile')
