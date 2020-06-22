@@ -9,7 +9,8 @@ module.exports = {
       // "minBrowserVersion": "76",
       osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
       // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
-      timeout: 28000
+      timeout: 28000,
+      'browserstack.console': 'errors'
     }, 
     mobile: {
       // device: ['Samsung Galaxy S20'],
@@ -28,9 +29,9 @@ module.exports = {
       device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
       // osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
       device_browser: 'chrome',
-      realMobile: true
-    },
-    'browserstack.console': 'errors'
+      realMobile: true,
+      'browserstack.console': 'errors'
+    }
   },
   lookupData: [
     {
@@ -41,7 +42,7 @@ module.exports = {
         targetWord: 'fero',
         text: 'ferus: wild, savage; uncivilized; untamed; fierce;'
       }
-    }/*,
+    },
     {
       clickData: {
         path: '#latin-text-cupidinibus'
@@ -95,7 +96,7 @@ module.exports = {
         targetWord: 'እግዚአብሔር',
         text: ['common noun', 'dominus, universi, Dei']
       }
-    },
+    }/*,
     {
       clickData: {
         path: '#zho-text-shui'
