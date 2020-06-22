@@ -54,6 +54,8 @@ module.exports = {
       'browserstack.key': creds.password
     })
 
+    console.info(capabilitiesCurrent)
+
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)
@@ -141,7 +143,7 @@ module.exports = {
     if (displayedPanel) {
       const panelHeader = await panel.findElement(By.className('alpheios-panel__header'))
 
-      const panelCloseButton = await panelHeader.findElement(By.id('alpheios-panel__close-btn'))
+      const panelCloseButton = await panelHeader.findElement(By.className('alpheios-panel__close-btn'))
 
       await panelCloseButton.click()
       await driver.wait(until.elementIsNotVisible(panel), timeoutG * 2)
@@ -304,11 +306,31 @@ module.exports = {
     await this.checkAndClosePopup(driver)
     await this.checkAndClosePanel(driver)
 
-    const textPartForLookup = await driver.findElements(By.css(clickData.path))
+    const clickPathId = clickData.path.substring(1)
+    
+    await driver.executeScript(`var element = document.getElementById("${clickPathId}"); element.scrollIntoView();`)
+    const textPartForLookup = await driver.findElement(By.css(clickData.path))
 
-    const num = clickData.num ? clickData.num - 1 : 0
-    if (textPartForLookup && textPartForLookup[num]) {
-      await textPartForLookup[num].click()
+    if (textPartForLookup) {
+      await textPartForLookup.click()
+      return true
+    } else {
+      console.error(`There is no text by path ${clickData.path}, it could not be clicked.`)
+    }
+    return false
+  },
+
+
+  async tapLookupWord (driver, clickData, lang) {
+    await this.checkAndClosePanelMobile(driver)
+
+    const clickPathId = clickData.path.substring(1)
+    await driver.executeScript(`var element = document.getElementById("${clickPathId}"); element.scrollIntoView();`)
+    const textPartForLookup = await driver.findElement(By.css(clickData.path))
+
+    if (textPartForLookup) {
+      await textPartForLookup.click()
+      // await driver.actions().tap(textPartForLookup).perform()
       return true
     } else {
       console.error(`There is no text by path ${clickData.path}, it could not be clicked.`)
@@ -317,15 +339,18 @@ module.exports = {
     return false
   },
 
+  
+
   async checkLexemeData (driver, checkData) {
     const popup = await driver.wait(until.elementLocated(By.id('alpheios-popup-inner')), timeoutG * 4);
 
     const popupContent = await driver.wait(until.elementLocated(By.className('alpheios-popup__content')), timeoutG * 4);
-
+    await popupContent.click()
     const popupSelection = await driver.wait(until.elementLocated(By.className('alpheios-popup__toolbar-text')), timeoutG * 4);
     let popupSelection_text = await popupSelection.getText()
     popupSelection_text = popupSelection_text.replace(' ', '').trim()
 
+    await popupContent.click()
     const popup_text = await popup.getText()
 
     const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph__dictentry')), timeoutG * 4);
@@ -516,24 +541,23 @@ module.exports = {
   async checkToolbarInflBrowserActionMobile (driver, checkText) {
     await this.checkAndClosePanelMobile(driver)
 
-    const toolbar =
-    await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
-    await toolbar.click()
+    await this.checkAndOpenActionPanel(driver)
 
-    const toolbarBtnHelp = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-inflectionsbrowser')), timeoutG * 4)
-    await toolbarBtnHelp.click()
+    const toolbarBtnInflBrowser = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-inflectionsbrowser')), timeoutG * 4)
+    await toolbarBtnInflBrowser.click()
+
 
     const panel =
       await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
 
     const panelText = await panel.getText()
-
+    await panel.click()
     return checkText.every(text => panelText.includes(text))
   },
 
   async checkToolbarGrammarAction (driver, checkText) {
     await this.checkAndClosePanel(driver)
-    const toolbarBtnGrammar = await driver.findElement(By.id('alpheios-action-panel-grammar'))
+    const toolbarBtnGrammar = await driver.findElement(By.id('alpheios-toolbar-navbuttons-grammar'))
     let toolbarBtnGrammarDisplayed = await toolbarBtnGrammar.isDisplayed()
     if (!toolbarBtnGrammarDisplayed) {
       const toolbarBtnShowNav = await driver.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
@@ -547,6 +571,34 @@ module.exports = {
     const panelText = await panel.getText()
     return checkText.every(text => panelText.includes(text))
 
+  },
+
+  async checkAndOpenActionPanel (driver) {
+    const actionPanel = await driver.findElement(By.className('alpheios-action-panel'))
+    const actionPanel_isDisplayed = await actionPanel.isDisplayed()
+
+    if (!actionPanel_isDisplayed) {
+      const toolbar =
+        await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+      await toolbar.click()
+    }
+  },
+  
+  async checkToolbarGrammarActionMobile (driver, checkText) {
+    await this.checkAndClosePanelMobile(driver)
+
+    await this.checkAndOpenActionPanel(driver)
+    
+
+    const toolbarBtnGrammar = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-grammar')), timeoutG * 4)
+    await toolbarBtnGrammar.click()
+
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+
+    const panelText = await panel.getText()
+    await panel.click()
+    return checkText.every(text => panelText.includes(text))
   },
 
   async checkToolbarUserAction (driver, checkText) {
@@ -566,6 +618,23 @@ module.exports = {
     return checkText.every(text => panelText.includes(text))
   },
 
+  async checkToolbarUserActionMobile (driver, checkText) {
+    await this.checkAndClosePanelMobile(driver)
+
+    await this.checkAndOpenActionPanel(driver)
+    
+
+    const toolbarBtnGrammar = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-user')), timeoutG * 4)
+    await toolbarBtnGrammar.click()
+
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+
+    const panelText = await panel.getText()
+    await panel.click()
+    return checkText.every(text => panelText.includes(text))
+  },
+
   async checkToolbarOptionsAction (driver, checkText) {
     await this.checkAndClosePanel(driver)
     const toolbarBtnOptions = await driver.findElement(By.id('alpheios-toolbar-navbuttons-options'))
@@ -581,6 +650,21 @@ module.exports = {
 
     const panelText = await panel.getText()
 
+    return checkText.every(text => panelText.includes(text))
+  },
+
+  async checkToolbarOptionsActionMobile (driver, checkText) {
+    await this.checkAndClosePanelMobile(driver)
+    await this.checkAndOpenActionPanel(driver)
+    
+    const toolbarBtnGrammar = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-options')), timeoutG * 4)
+    await toolbarBtnGrammar.click()
+
+    const panel =
+      await driver.wait(until.elementLocated(By.id('alpheios-panel-inner')), timeoutG * 4)
+
+    const panelText = await panel.getText()
+    await panel.click()
     return checkText.every(text => panelText.includes(text))
   },
 

@@ -189,35 +189,35 @@ module.exports = {
    * on mobile
    */
   async simpleInitialActionsMobileTest (params) {
-    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout)
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'mobile')
     const loaded = await alph.firstPageLoad(driver, params.url)
 
     expect(loaded).toBeTruthy()
 
-    const resultInflBrowserAction = await alph.checkToolbarInflBrowserAction(driver, params.checkData.inflBrowser)
+    const resultInflBrowserAction = await alph.checkToolbarInflBrowserActionMobile(driver, params.checkData.inflBrowser)
     if (!resultInflBrowserAction) {
       await driver.quit()
     }
     expect(resultInflBrowserAction).toBeTruthy()
-/*
-    const resultGrammarAction = await alph.checkToolbarGrammarAction(driver, params.checkData.grammar)
+
+    const resultGrammarAction = await alph.checkToolbarGrammarActionMobile(driver, params.checkData.grammar)
     if (!resultGrammarAction) {
       await driver.quit()
     }
     expect(resultGrammarAction).toBeTruthy()
 
-    const resultUserAction = await alph.checkToolbarUserAction(driver, params.checkData.user)
+    const resultUserAction = await alph.checkToolbarUserActionMobile(driver, params.checkData.user)
     if (!resultUserAction) {
       await driver.quit()
     }
     expect(resultUserAction).toBeTruthy()
 
-    const resultUserOptions = await alph.checkToolbarOptionsAction(driver, params.checkData.options)
+    const resultUserOptions = await alph.checkToolbarOptionsActionMobile(driver, params.checkData.options)
     if (!resultUserOptions) {
       await driver.quit()
     }
     expect(resultUserAction).toBeTruthy()
-*/
+
     await driver.quit()
   },
   
@@ -250,6 +250,43 @@ module.exports = {
           await alph.checkHasTreebankTab(driver)
         }
 
+      }
+    }
+    await driver.quit()
+  },
+
+    /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.lookupData list, executes a lookup using
+   * a long tap on the word, verifies lexeme data and  whether or not
+   * there are inflections
+   */
+  async tapLookupTest (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'mobile')
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+    if (loaded && params.lookupData) {
+      if (!Array.isArray(params.lookupData)) {
+        params.lookupData = [params.lookupData]
+      }
+
+      for(let i=0; i<params.lookupData.length; i++) {
+        let lookupData = params.lookupData[i]
+        const clickResult = await alph.tapLookupWord(driver, lookupData.clickData, params.lang)
+        let reload = false
+
+        if (params.chineseLoadedCheck) {
+          reload = await alph.doChineseLoadedCheckMobile(driver)
+        }
+
+        if (reload) {
+          await alph.lookupWordReloadMobile(driver)
+        }
+
+        if (lookupData.checkData.text) {
+          await alph.checkLexemeDataMobile(driver, lookupData.checkData, params.chineseLoadedCheck)
+        }
       }
     }
     await driver.quit()
