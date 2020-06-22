@@ -8,7 +8,8 @@ module.exports = {
       // "minBrowserVersion": "76",
       osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
       // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
-      timeout: 28000
+      timeout: 28000,
+      'browserstack.console': 'errors'
     }, 
     mobile: {
       // device: ['Samsung Galaxy S20'],
@@ -24,11 +25,12 @@ module.exports = {
       // device: ['OnePlus'],
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
-      device: ['iPhone 11 Pro Max'],
-      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
-      device_browser: 'safari',
-      realMobile: true
-    },
+      device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
+      // osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
+      device_browser: 'chrome',
+      realMobile: true,
+      'browserstack.console': 'errors'
+    }
   },
   checkData: {
     help: ['Help', 'FAQ/Known Issues', 'Double-click on a word to see lemmas'],

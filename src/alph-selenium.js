@@ -54,7 +54,7 @@ module.exports = {
       'browserstack.key': creds.password
     })
 
-    console.info(capabilitiesCurrent)
+    // console.info(capabilitiesCurrent)
 
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
@@ -321,7 +321,7 @@ module.exports = {
   },
 
 
-  async tapLookupWord (driver, clickData, lang) {
+  async clickLookupWordMobile (driver, clickData, lang) {
     await this.checkAndClosePanelMobile(driver)
 
     const clickPathId = clickData.path.substring(1)
@@ -330,7 +330,6 @@ module.exports = {
 
     if (textPartForLookup) {
       await textPartForLookup.click()
-      // await driver.actions().tap(textPartForLookup).perform()
       return true
     } else {
       console.error(`There is no text by path ${clickData.path}, it could not be clicked.`)

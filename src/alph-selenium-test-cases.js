@@ -261,7 +261,7 @@ module.exports = {
    * a long tap on the word, verifies lexeme data and  whether or not
    * there are inflections
    */
-  async tapLookupTest (params) {
+  async clickLookupTestMobile (params) {
     const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'mobile')
     const loaded = await alph.firstPageLoad(driver, params.url)
 
@@ -273,7 +273,7 @@ module.exports = {
 
       for(let i=0; i<params.lookupData.length; i++) {
         let lookupData = params.lookupData[i]
-        const clickResult = await alph.tapLookupWord(driver, lookupData.clickData, params.lang)
+        const clickResult = await alph.clickLookupWordMobile(driver, lookupData.clickData, params.lang)
         let reload = false
 
         if (params.chineseLoadedCheck) {
