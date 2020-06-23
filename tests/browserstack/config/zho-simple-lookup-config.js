@@ -26,11 +26,11 @@ module.exports = {
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
       // device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
-      device: ['Samsung'],
-      osVersions: [{ 'os' : 'android', 'os_version' : '10.0' }],
+      // device: ['iPhone 11 Pro Max', 'iPhone XS', 'Samsung Galaxy S20 Plus', 'Google Pixel 4', 'Xiaomi Redmi Note 7', 'iPad Pro 11 2018' ],
+      device: 'iPhone XS',
       // device_browser: 'chrome',
-      // device_browser: ['firefox'],
-      realMobile: true,
+      device_like: false,
+      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }], 
       'browserstack.console': 'errors'
     }
   },

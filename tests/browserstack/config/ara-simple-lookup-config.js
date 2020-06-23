@@ -26,10 +26,10 @@ module.exports = {
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
       // device: ['iPhone 11 Pro Max', 'iPhone XS', 'Samsung Galaxy S20 Plus', 'Google Pixel 4', 'Xiaomi Redmi Note 7', 'iPad Pro 11 2018' ],
-      device: [ 'iPhone XS' ],
+      device: 'iPhone XS',
+      // device_browser: 'safari',
       device_like: false,
-      device_browser: 'chrome',
-      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
+      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],      
       realMobile: true,
       'browserstack.console': 'errors'
     }

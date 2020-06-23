@@ -25,9 +25,9 @@ module.exports = {
       // device: ['OnePlus'],
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
-      device: ['Samsung'],
-      // device_browser: 'chrome',
-      osVersions: [{ 'os' : 'android', 'os_version' : '10.0' }],
+      device: ['iPhone 11 Pro Max', 'iPhone XS', 'Samsung Galaxy S20 Plus', 'Google Pixel 4', 'Xiaomi Redmi Note 7', 'iPad Pro 11 2018' ],
+      device_browser: 'chrome',
+      device_like: false,
       realMobile: true,
       'browserstack.console': 'errors'
     }
