@@ -17,7 +17,7 @@ describe('ara-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it(`should execute simple (ara) lookup - ${version.name}`, async () => {
+    it.skip(`should execute simple (ara) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (ara) lookup - desktop' } ),
         url: testUrl,

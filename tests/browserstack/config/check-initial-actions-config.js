@@ -25,9 +25,9 @@ module.exports = {
       // device: ['OnePlus'],
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
-      device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
-      // osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
-      device_browser: 'chrome',
+      device: ['iPhone'],
+      // device_browser: 'safari',
+      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
       realMobile: true,
       'browserstack.console': 'errors'
     }

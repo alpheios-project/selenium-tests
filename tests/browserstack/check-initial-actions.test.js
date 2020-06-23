@@ -16,7 +16,7 @@ describe('ara-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it(`should execute simple initial actions - ${version.name}`, async () => {
+    it.skip(`should execute simple initial actions - ${version.name}`, async () => {
       await alph_tests.simpleInitialActionsTest({
         capabilities: Object.assign(version, { buildName: 'Simple initial actions - desktop' } ),
         url: testUrl,

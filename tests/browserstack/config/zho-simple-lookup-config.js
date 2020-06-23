@@ -5,10 +5,11 @@ module.exports = {
       browserName: 'firefox',
       // browserVersions: ['68.0', '67.0', '66.0', '65.0', '64.0', '63.0', '62.0'],
       browserVersions: ['75.0'],
-      // "minBrowserVersion": "76",
+      // minBrowserVersion: "70",
       osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
       // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
-      timeout: 28000
+      timeout: 28000,
+      'browserstack.console': 'errors'
     }, 
     mobile: {
       // device: ['Samsung Galaxy S20'],
@@ -24,11 +25,14 @@ module.exports = {
       // device: ['OnePlus'],
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
-      device: ['iPhone 11 Pro Max'],
-      osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
-      device_browser: 'safari',
-      realMobile: true
-    },
+      // device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
+      device: ['Samsung'],
+      osVersions: [{ 'os' : 'android', 'os_version' : '10.0' }],
+      // device_browser: 'chrome',
+      // device_browser: ['firefox'],
+      realMobile: true,
+      'browserstack.console': 'errors'
+    }
   },
   timeout: 68000,
   lookupData: {

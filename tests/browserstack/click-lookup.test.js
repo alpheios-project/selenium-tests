@@ -17,7 +17,7 @@ describe('click-lookup.test.js', () => {
 
   // console.info('versions', versions)
   versionsDesktop.forEach(version => {
-    it(`should execute click lookup - ${version.name}`, async () => {
+    it.skip(`should execute click lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { buildName: 'Click lookup - desktop' } )
       // console.info('capabilities - ', capabilities)
       await alph_tests.clickLookupTest({

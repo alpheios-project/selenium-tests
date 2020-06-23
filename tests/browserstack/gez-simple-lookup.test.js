@@ -17,7 +17,7 @@ describe('gez-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it(`should execute simple (gez) lookup - ${version.name}`, async () => {
+    it.skip(`should execute simple (gez) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (gez) lookup' } ),
         url: testUrl,
@@ -32,7 +32,7 @@ describe('gez-simple-lookup.test.js', () => {
   // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
 
   versionsMobile.forEach(version => {
-    it.skip(`should execute no result (gez) lookup - ${version.name}`, async () => {
+    it(`should execute no result (gez) lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { 
       buildName: 'Simple (gez) lookup - mobile',
       realMobile: true,

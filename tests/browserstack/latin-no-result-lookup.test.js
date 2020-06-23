@@ -17,7 +17,7 @@ describe('latin-no-result-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it(`should execute no result (latin) lookup - ${version.name}`, async () => {
+    it.skip(`should execute no result (latin) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'No result (latin) lookup' } ),
         url: testUrl,
