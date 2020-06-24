@@ -36,6 +36,14 @@ module.exports = {
 
   },
 
+  today () {
+    let dt = new Date()
+    return dt.getFullYear() + '/'
+        + ((dt.getMonth()+1) < 10 ? '0' : '') + (dt.getMonth()+1)  + '/'
+        + ((dt.getDate() < 10) ? '0' : '') + dt.getDate() 
+
+  },
+
   async takeTestScreenshot (driver, prev = '') {
     const fs = require('fs')
     const img = await driver.takeScreenshot()
@@ -191,7 +199,14 @@ module.exports = {
     let langHint_text = await langHint.getText()
     langHint_text = langHint_text.replace('(', '').replace(')', '')
 
-    return langHint_text === lang
+    if (langHint_text) {
+      return langHint_text === lang
+    } else {
+      const langSelect = await driver.findElement(By.id('alpheios-feature-options__2__lookupLanguage-id'))
+      const langSelectValue = await langSelect.getAttribute('value')
+      return langSelectValue === lang
+    }
+    
   },
 
   async changeLookupLanguage (driver, form, lang) {
@@ -245,25 +260,32 @@ module.exports = {
   },
 
   async lookupWord (driver, clickData, lang, needActivation = true) {
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
+
     let resChangeLang = true
     let lookupBlock
 
+    const targetWord = clickData.word ? clickData.word : clickData
+
     if (needActivation) {
       lookupBlock = await this.activateLookup(driver)
-
-      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
-      if (!resLangCheck) {
-        resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
-      }
-
-      expect(resChangeLang).toBeTruthy()
     } else {
       lookupBlock = await this.getLookupBlock(driver)
     }
 
+    let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+    console.info('lookupWord - resLangCheck', resLangCheck)
+
+    if (!resLangCheck) {
+      resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+      console.info('lookupWord - resChangeLang inside', resChangeLang)
+    }
+
+    expect(resChangeLang).toBeTruthy()
     if (resChangeLang) {
       await lookupBlock.input.click()
-      await lookupBlock.input.sendKeys(clickData.word)
+      await lookupBlock.input.sendKeys(targetWord)
       // await lookupBlock.input.sendKeys(Key.RETURN)
 
       const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
@@ -700,5 +722,58 @@ module.exports = {
     }
   },
 
+  async openWordlistTab (driver) {
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
 
+    const toolbar =
+      await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+
+    const wordlistIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-wordlist'))
+    let wordlistIconToolbar_isDisplayed = await wordlistIconToolbar.isDisplayed()
+
+    if (!wordlistIconToolbar_isDisplayed) {
+      const shownavIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await shownavIconToolbar.click()
+      wordlistIconToolbar_isDisplayed = await wordlistIconToolbar.isDisplayed()
+    }
+
+    await wordlistIconToolbar.click()
+  },
+
+  async checkWordlist (driver, words) {
+    await this.openWordlistTab(driver)
+
+    const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
+    const wordlistTabItems = await wordlistTab.findElements(By.className('alpheios-wordlist-language__worditem'))
+
+    expect(wordlistTabItems.length).toEqual(words.length)
+
+    for (let i = 0; i < wordlistTabItems.length; i++) {
+      const word = words[i]
+      const wordItem = wordlistTabItems[i]
+
+      const wordItem_targetWord = await wordItem.findElement(By.className('alpheios-worditem__targetWord'))
+      const wordItem_targetWord_text = await wordItem_targetWord.getText()
+
+      expect(wordItem_targetWord_text).toEqual(word.targetWord)
+
+      const wordItem_lemmaList = await wordItem.findElement(By.className('alpheios-worditem__lemmasList'))
+      const wordItem_lemmaList_text = await wordItem_lemmaList.getText()
+
+      expect(wordItem_lemmaList_text).toEqual(word.lemmaList)
+
+      const wordItem_frequency = await wordItem.findElement(By.className('alpheios-worditem__frequency'))
+      const wordItem_frequency_text = await wordItem_frequency.getText()
+
+      expect(wordItem_frequency_text).toEqual('1')
+
+      const wordItem_updatedDT = await wordItem.findElement(By.className('alpheios-worditem__updatedDT'))
+      const wordItem_updatedDT_text = await wordItem_updatedDT.getText()
+
+      expect(wordItem_updatedDT_text).toEqual(this.today())
+
+      console.info('checked', word)
+    }
+  }
 }
