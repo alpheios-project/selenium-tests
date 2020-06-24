@@ -54,15 +54,12 @@ module.exports = {
       'browserstack.key': creds.password
     })
 
-    // console.info(capabilitiesCurrent)
-
     driver = new Builder()
       .usingServer('http://hub-cloud.browserstack.com/wd/hub')
       .withCapabilities(capabilitiesCurrent)
       .build()
 
     if (type === 'desktop') {
-      // console.info('defineDriver - inside')
       driver.manage().window().maximize()
     }
 
@@ -391,7 +388,6 @@ module.exports = {
     try {
       const popupDictentry = await driver.wait(until.elementLocated(By.className('alpheios-morph-definitions_list__definition')), timeoutG * 4);
       const popupDictentry_text = await popupDictentry.getText()
-      // console.info('popupDictentry_text - ', popupDictentry_text)
     } catch (e) {
       console.error(e)
     }
@@ -400,14 +396,11 @@ module.exports = {
     const popupSelection_isDisplayed = await popupSelection.isDisplayed()
 
     let popup_text
-    // console.info('popup_text - 1', popupSelection_isDisplayed)
     if (popupSelection_isDisplayed) {
       popup_text = await popupSelection.getText()
-      // console.info('popup_text - 1', popup_text)
     } else {
       const popupSelectionDefs = await driver.wait(until.elementLocated(By.className('alpheios-panel__tab-panel')), timeoutG * 4);
       popup_text = await popupSelectionDefs.getText()
-      // console.info('popup_text - 2', popup_text)
     }
 
     if (!Array.isArray(checkData.text)) { checkData.text = [checkData.text] }
@@ -461,7 +454,6 @@ module.exports = {
   checkTextFromPopup (sourcePopupText, text) {
     let finalLexemeCheck = false
 
-    // console.info('checkTextFromPopup - ', sourcePopupText.includes(text), text, sourcePopupText)
     finalLexemeCheck = sourcePopupText.includes(text)
 
     if (!finalLexemeCheck) {

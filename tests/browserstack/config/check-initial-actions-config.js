@@ -6,7 +6,7 @@ module.exports = {
       // browserVersions: ['68.0', '67.0', '66.0', '65.0', '64.0', '63.0', '62.0'],
       browserVersions: ['75.0'],
       // "minBrowserVersion": "76",
-      osVersions: [{ 'os' : 'Windows', 'os_version' : '8.1' }],
+      osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
       // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
       timeout: 28000,
       'browserstack.console': 'errors'
@@ -25,9 +25,11 @@ module.exports = {
       // device: ['OnePlus'],
       // device: ['Moto'],
       // device: ['Xiaomi', 'LG', 'Xperia'],
-      device: ['Samsung Galaxy S20 Ultra', 'iPhone 11 Pro Max'],
+      // device: ['iPhone 11 Pro Max', 'iPhone XS', 'Samsung Galaxy S20 Plus', 'Google Pixel 4', 'Xiaomi Redmi Note 7', 'iPad Pro 11 2018' ],
+      device: ['iPhone 11 Pro Max', 'Samsung Galaxy S20 Plus' ],
+      // device_browser: 'safari',
+      device_like: false,
       // osVersions: [{ 'os' : 'ios', 'os_version' : '13' }],
-      device_browser: 'chrome',
       realMobile: true,
       'browserstack.console': 'errors'
     }

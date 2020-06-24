@@ -63,7 +63,6 @@ module.exports = {
       }
 
       for(let i=0; i<params.lookupData.length; i++) {
-        // console.info('params.lookupData - ', params.lookupData)
         let lookupData = params.lookupData[i]
 
         await alph.lookupWordMobile(driver, lookupData.clickData, params.lang, i === 0)

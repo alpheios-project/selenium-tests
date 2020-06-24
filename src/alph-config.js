@@ -22,7 +22,6 @@ module.exports = {
 
     let finalVersions = []
     if (!Array.isArray(env)) { env = [env]}
-    // console.info('env', env)
 
     env.forEach(envItem => {
       let minBrowserVersion
@@ -50,12 +49,12 @@ module.exports = {
 
         if (envItem.device) {
           if (!Array.isArray(envItem.device)) { envItem.device = [envItem.device] }
-          result = result && envItem.device.some(device => device === version.device || version.device.includes(device))
+          result = result && envItem.device.some(device => device === version.device || envItem.device_like && version.device.includes(device))
         }
 
         if (envItem.device_browser) {
           if (!Array.isArray(envItem.device_browser)) { envItem.device_browser = [envItem.device_browser] }
-          result = result && envItem.device_browser.some(device_browser => device_browser === version.device_browser || version.device_browser.includes(device_browser))
+          result = result && envItem.device_browser.some(device_browser => device_browser === version.device_browser)
         }
 
         return result
