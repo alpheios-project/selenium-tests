@@ -17,7 +17,7 @@ describe('greek-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it.skip(`should execute simple (greek) lookup - ${version.name}`, async () => {
+    it(`should execute simple (greek) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (greek) lookup - desktop' } ),
         url: testUrl,

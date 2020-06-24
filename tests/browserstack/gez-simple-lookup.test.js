@@ -17,7 +17,7 @@ describe('gez-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it.skip(`should execute simple (gez) lookup - ${version.name}`, async () => {
+    it(`should execute simple (gez) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (gez) lookup' } ),
         url: testUrl,

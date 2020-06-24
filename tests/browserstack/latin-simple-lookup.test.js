@@ -19,7 +19,7 @@ describe('latin-simple-lookup.test.js', () => {
   // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
 
   versionsDesktop.forEach(version => {
-    it.skip(`should execute simple (latin) lookup - ${version.name}`, async () => {
+    it(`should execute simple (latin) lookup - ${version.name}`, async () => {
       // console.info('version - ', `${version.browser} ${version.browser_version} ${version.os} ${version.os_version}`)
       // console.info('testUrl - ', testUrl)
       

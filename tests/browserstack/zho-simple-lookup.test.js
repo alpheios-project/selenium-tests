@@ -17,7 +17,7 @@ describe('zho-simple-lookup.test.js', () => {
   afterEach(() => {})
 
   versionsDesktop.forEach(version => {
-    it.skip(`should execute simple (zho) lookup - ${version.name}`, async () => {
+    it(`should execute simple (zho) lookup - ${version.name}`, async () => {
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (zho) lookup' } ),
         url: testUrl,

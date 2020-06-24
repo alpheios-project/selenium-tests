@@ -22,7 +22,6 @@ module.exports = {
 
     let finalVersions = []
     if (!Array.isArray(env)) { env = [env]}
-    // console.info('env', env)
 
     env.forEach(envItem => {
       let minBrowserVersion
