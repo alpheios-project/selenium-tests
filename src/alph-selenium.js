@@ -779,7 +779,8 @@ module.exports = {
 
   async findWordlistLangBlock (driver, langCode) {
     const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
-    const wordlistLangBlock = await wordlistTab.findElements()
+    const wordlistLangBlock = await wordlistTab.findElement(By.id(`alpheios-wordlist-language-${langCode}`))
+    return wordlistLangBlock
   },
 
   async downloadWordlist (driver, langCode) {
