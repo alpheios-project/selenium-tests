@@ -309,6 +309,10 @@ module.exports = {
       }
 
       await alph.checkWordlist(driver, params.wordlistData.words)
+
+      const langs = params.wordlistData.words.map(word => word.langCode).filter((item, index, arr) => arr.indexOf(item) === index)
+      console.info('langs - ', langs)
+      await alph.downloadWordlist(driver, langs[0])
     }
     await driver.quit()
   }

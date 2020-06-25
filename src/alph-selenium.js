@@ -759,21 +759,30 @@ module.exports = {
       expect(wordItem_targetWord_text).toEqual(word.targetWord)
 
       const wordItem_lemmaList = await wordItem.findElement(By.className('alpheios-worditem__lemmasList'))
-      const wordItem_lemmaList_text = await wordItem_lemmaList.getText()
-
+      let wordItem_lemmaList_text = await wordItem_lemmaList.getText()
+      wordItem_lemmaList_text = wordItem_lemmaList_text.replace(/\s{2,}/g, ' ')
       expect(wordItem_lemmaList_text).toEqual(word.lemmaList)
 
       const wordItem_frequency = await wordItem.findElement(By.className('alpheios-worditem__frequency'))
       const wordItem_frequency_text = await wordItem_frequency.getText()
 
-      expect(wordItem_frequency_text).toEqual('1')
+      expect(wordItem_frequency_text.trim()).toEqual('1')
 
       const wordItem_updatedDT = await wordItem.findElement(By.className('alpheios-worditem__updatedDT'))
       const wordItem_updatedDT_text = await wordItem_updatedDT.getText()
 
-      expect(wordItem_updatedDT_text).toEqual(this.today())
+      expect(wordItem_updatedDT_text.trim()).toEqual(this.today())
 
       console.info('checked', word)
     }
+  },
+
+  async findWordlistLangBlock (driver, langCode) {
+    const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
+    const wordlistLangBlock = await wordlistTab.findElements()
+  },
+
+  async downloadWordlist (driver, langCode) {
+    const wordlistLangBlock = this.findWordlistLangBlock(driver, langCode)
   }
 }
