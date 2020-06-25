@@ -289,5 +289,31 @@ module.exports = {
       }
     }
     await driver.quit()
+  },
+
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.wordlistData list, executes a lookup using the
+   * lookup box to save to wordlist
+   * on desktop platforms
+   */
+  async wordlistCheckTest (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'desktop')
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+    if (loaded && params.wordlistData && params.wordlistData.words) {
+      for (let i = 0; i<params.wordlistData.words.length; i++) {
+        let lookupData = params.wordlistData.words[i]
+        await alph.lookupWord(driver, lookupData.targetWord, lookupData.lang, i===0)
+      }
+
+      await alph.checkWordlist(driver, params.wordlistData.words)
+
+      const langs = params.wordlistData.words.map(word => word.langCode).filter((item, index, arr) => arr.indexOf(item) === index)
+      console.info('langs - ', langs)
+      await alph.downloadWordlist(driver, langs[0])
+    }
+    await driver.quit()
   }
 }
