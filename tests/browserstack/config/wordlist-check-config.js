@@ -3,12 +3,12 @@ module.exports = {
   testUrl: 'https://alpheios-misc-dev.s3.us-east-2.amazonaws.com/selenium-tests/index.html',
   env: {
     desktop: {
-      browserName: 'safari',
+      browserName: 'chrome',
       // browserVersions: ['68.0', '67.0', '66.0', '65.0', '64.0', '63.0', '62.0'],
-      // browserVersions: ['81.0'],
+      browserVersions: ['81.0'],
       // minBrowserVersion: "70",
-      // osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
-      osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
+      osVersions: [{ 'os' : 'Windows', 'os_version' : '10' }],
+      // osVersions: [{ 'os' : 'OS X', 'os_version' : 'Catalina' }],
       timeout: 28000,
       'browserstack.console': 'errors'
     }/*, 
