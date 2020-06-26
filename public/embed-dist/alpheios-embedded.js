@@ -273,7 +273,7 @@ class Embedded {
       textQuerySelector: this.enabledSelector,
       triggerPreCallback: this.triggerPreCallback,
       enableMouseMoveOverride: this.enableMouseMoveOverride,
-      app: { version:`${_package_json__WEBPACK_IMPORTED_MODULE_1__["version"]}`, buildBranch: "dev", buildNumber: "20200626447", buildName: "dev.20200626447", name: _package_json__WEBPACK_IMPORTED_MODULE_1__["description"] },
+      app: { version:`${_package_json__WEBPACK_IMPORTED_MODULE_1__["version"]}`, buildBranch: "dev", buildNumber: "20200626482", buildName: "dev.20200626482", name: _package_json__WEBPACK_IMPORTED_MODULE_1__["description"] },
       appType: components.Platform.appTypes.EMBEDDED_LIBRARY,
       clientId: this.clientId,
       // Disable text selection on mobile devices
