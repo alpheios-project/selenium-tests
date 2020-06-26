@@ -784,6 +784,62 @@ module.exports = {
   },
 
   async downloadWordlist (driver, langCode) {
-    const wordlistLangBlock = this.findWordlistLangBlock(driver, langCode)
+    const wordlistLangBlock = await this.findWordlistLangBlock(driver, langCode)
+
+    const wordListLangBlockDownload = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-commands__item-download'))
+    await wordListLangBlockDownload.click()
+
+    const downloadConfirmBlock = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-download-confirmation'))
+    let downloadConfirmBlock_isDisplayed = await downloadConfirmBlock.isDisplayed()
+
+    expect(downloadConfirmBlock_isDisplayed).toBeTruthy()
+    const downloadConfirmBlockButton = await downloadConfirmBlock.findElement(By.tagName('button'))
+
+    await downloadConfirmBlockButton.click()
+
+    downloadConfirmBlock_isDisplayed = await downloadConfirmBlock.isDisplayed()
+    expect(downloadConfirmBlock_isDisplayed).toBeFalsy()
+
+    await wordListLangBlockDownload.click()
+
+    
+    const checkboxWithFiltering = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-with-filters.alpheios-checkbox-block'))
+    await checkboxWithFiltering.click()
+
+    const checkboxWithFiltering_input = await checkboxWithFiltering.findElement(By.tagName('input'))
+    const checkboxWithFiltering_input_isSelected = await checkboxWithFiltering_input.isSelected()
+
+    expect(checkboxWithFiltering_input_isSelected).toBeTruthy()
+
+    const checkboxFlashcard = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-for-flashcards.alpheios-checkbox-block'))
+    await checkboxFlashcard.click()
+
+    const checkboxFlashcard_input = await checkboxFlashcard.findElement(By.tagName('input'))
+    const checkboxFlashcard_input_isSelected = await checkboxFlashcard_input.isSelected()
+
+    expect(checkboxFlashcard_input_isSelected).toBeTruthy()
+  },
+
+  async openUserTab (driver) {
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
+
+    const toolbar =
+      await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+
+    const userIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-user'))
+    let userIconToolbar_isDisplayed = await userIconToolbar.isDisplayed()
+
+    if (!userIconToolbar_isDisplayed) {
+      const shownavIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await shownavIconToolbar.click()
+      userIconToolbar_isDisplayed = await userIconToolbar.isDisplayed()
+    }
+
+    await userIconToolbar.click()
+  },
+
+  async loginTestUser (driver) {
+    await openUserTab(driver)
   }
 }

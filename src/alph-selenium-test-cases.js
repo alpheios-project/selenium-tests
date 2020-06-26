@@ -303,6 +303,11 @@ module.exports = {
 
     expect(loaded).toBeTruthy()
     if (loaded && params.wordlistData && params.wordlistData.words) {
+
+      if (params.loginFirst) {
+        await alph.loginTestUser(driver)
+      }
+
       for (let i = 0; i<params.wordlistData.words.length; i++) {
         let lookupData = params.wordlistData.words[i]
         await alph.lookupWord(driver, lookupData.targetWord, lookupData.lang, i===0)
@@ -311,7 +316,6 @@ module.exports = {
       await alph.checkWordlist(driver, params.wordlistData.words)
 
       const langs = params.wordlistData.words.map(word => word.langCode).filter((item, index, arr) => arr.indexOf(item) === index)
-      console.info('langs - ', langs)
       await alph.downloadWordlist(driver, langs[0])
     }
     await driver.quit()
