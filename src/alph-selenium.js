@@ -818,5 +818,28 @@ module.exports = {
     const checkboxFlashcard_input_isSelected = await checkboxFlashcard_input.isSelected()
 
     expect(checkboxFlashcard_input_isSelected).toBeTruthy()
+  },
+
+  async openUserTab (driver) {
+    await this.checkAndClosePopup(driver)
+    await this.checkAndClosePanel(driver)
+
+    const toolbar =
+      await driver.wait(until.elementLocated(By.id('alpheios-toolbar-inner')), timeoutG * 4)
+
+    const userIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-user'))
+    let userIconToolbar_isDisplayed = await userIconToolbar.isDisplayed()
+
+    if (!userIconToolbar_isDisplayed) {
+      const shownavIconToolbar = await toolbar.findElement(By.id('alpheios-toolbar-navbuttons-shownav'))
+      await shownavIconToolbar.click()
+      userIconToolbar_isDisplayed = await userIconToolbar.isDisplayed()
+    }
+
+    await userIconToolbar.click()
+  },
+
+  async loginTestUser (driver) {
+    await openUserTab(driver)
   }
 }
