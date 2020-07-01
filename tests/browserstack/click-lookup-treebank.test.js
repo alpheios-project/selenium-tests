@@ -14,11 +14,9 @@ describe('click-lookup-treebank.test.js', () => {
     beforeEach(() => {})
     afterEach(() => {})
   
-    // console.info('versions', versions)
     versionsDesktop.forEach(version => {
       it(`should execute click lookup and get treebank data - ${version.name}`, async () => {
         const capabilities = Object.assign(version, { buildName: 'Click lookup (treebank) - desktop' } )
-        // console.info('capabilities - ', capabilities)
         await alph_tests.clickLookupTreebankTest({
           capabilities,
           url: testUrl,
