@@ -22,14 +22,14 @@ describe('latin-simple-lookup.test.js', () => {
           capabilities: Object.assign(version, { buildName: 'Wordlist check - desktop' } ),
           url: testUrl,
           wordlistData: config.wordlistData,
-          loginFirst: true
+          loginFirst: false
         })
         
       }, 5000000)
     })
 
     versionsMobile.forEach(version => {
-      it(`should execute wordlist workflow steps - ${version.name}`, async () => {
+      it.skip(`should execute wordlist workflow steps - ${version.name}`, async () => {
         const capabilities = Object.assign(version, { 
         buildName: 'Wordlist check - mobile',
         realMobile: true,
@@ -41,7 +41,7 @@ describe('latin-simple-lookup.test.js', () => {
         capabilities,
         url: testUrl,
         wordlistData: config.wordlistData,
-        loginFirst: true
+        loginFirst: false
       })
   
       }, 5000000)
