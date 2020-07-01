@@ -15,11 +15,9 @@ describe('click-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
-  // console.info('versions', versions)
   versionsDesktop.forEach(version => {
     it(`should execute click lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { buildName: 'Click lookup - desktop' } )
-      // console.info('capabilities - ', capabilities)
       await alph_tests.clickLookupTest({
         capabilities,
         url: testUrl,
@@ -29,14 +27,11 @@ describe('click-lookup.test.js', () => {
     }, 50000000)
   })
 
-  // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
-
   versionsMobile.forEach(version => {
     it(`should execute click lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { 
       buildName: 'Click lookup - mobile',
       realMobile: true,
-      // 'browserstack.appium_version': '1.17.0',
       'browserstack.local': false,
       nativeWebTap: true
     } )

@@ -28,8 +28,6 @@ describe('latin-no-result-lookup.test.js', () => {
     }, 5000000)
   })
 
-  // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
-
   versionsMobile.forEach(version => {
     it(`should execute no result (latin) lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { 

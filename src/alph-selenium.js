@@ -211,8 +211,8 @@ module.exports = {
 
   async changeLookupLanguage (driver, form, lang) {
     const langChangeLink = await form.findElement(By.id('alpheios-lookup-form-lang-change'))
-
-    if (langChangeLink.isDisplayed()) {
+    const langChangeLink_isDisplayed = await langChangeLink.isDisplayed()
+    if (langChangeLink_isDisplayed) {
       langChangeLink.click()
       const langChangeSelect = await form.findElement(By.className('alpheios-setting__control'))
       const result = await this.changeSelectedOption(driver, langChangeSelect, lang)
@@ -275,16 +275,15 @@ module.exports = {
     }
 
     let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
-    console.info('lookupWord - resLangCheck', resLangCheck)
 
     if (!resLangCheck) {
       resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
-      console.info('lookupWord - resChangeLang inside', resChangeLang)
     }
 
     expect(resChangeLang).toBeTruthy()
     if (resChangeLang) {
       await lookupBlock.input.click()
+      await lookupBlock.input.clear()
       await lookupBlock.input.sendKeys(targetWord)
       // await lookupBlock.input.sendKeys(Key.RETURN)
 
@@ -297,22 +296,24 @@ module.exports = {
     let resChangeLang = true
     let lookupBlock
 
+    const targetWord = clickData.word ? clickData.word : clickData
+
     if (needActivation) {
       lookupBlock = await this.activateLookupMobile(driver)
-      let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
-
-      if (!resLangCheck) {
-        resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
-      }
-
-      expect(resChangeLang).toBeTruthy()
     } else {
       lookupBlock = await this.getLookupBlockMobile(driver)
     }
 
+    let resLangCheck = await this.checkLanguageInLookup(driver, lookupBlock.form, lang)
+
+    if (!resLangCheck) {
+      resChangeLang = await this.changeLookupLanguage(driver, lookupBlock.form, lang)
+    }
+
     if (resChangeLang) {
       await lookupBlock.input.click()
-      await lookupBlock.input.sendKeys(clickData.word)
+      await lookupBlock.input.clear()
+      await lookupBlock.input.sendKeys(targetWord)
       // await lookupBlock.input.sendKeys(Key.RETURN)
       
       const lookupFormButtonToolbar = await lookupBlock.form.findElement(By.id('alpheios-lookup-form-button'))
@@ -741,15 +742,27 @@ module.exports = {
     await wordlistIconToolbar.click()
   },
 
-  async checkWordlist (driver, words) {
-    await this.openWordlistTab(driver)
+  async openWordlistTabMobile (driver) {
+    await this.checkAndClosePanelMobile(driver)
+    await this.checkAndOpenActionPanel(driver)
+
+    const toolbarBtnWordlist = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-wordlist')), timeoutG * 4)
+    await toolbarBtnWordlist.click()
+  },
+
+  async checkWordlist (driver, words, type = 'desktop') {
+    if (type === 'desktop') {
+      await this.openWordlistTab(driver)
+    } else {
+      await this.openWordlistTabMobile(driver)
+    }
 
     const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
     const wordlistTabItems = await wordlistTab.findElements(By.className('alpheios-wordlist-language__worditem'))
 
     expect(wordlistTabItems.length).toEqual(words.length)
 
-    for (let i = 0; i < wordlistTabItems.length; i++) {
+    for (let i = wordlistTabItems.length - 1 ; i >= 0; i--) {
       const word = words[i]
       const wordItem = wordlistTabItems[i]
 
@@ -772,8 +785,6 @@ module.exports = {
       const wordItem_updatedDT_text = await wordItem_updatedDT.getText()
 
       expect(wordItem_updatedDT_text.trim()).toEqual(this.today())
-
-      console.info('checked', word)
     }
   },
 
@@ -793,31 +804,80 @@ module.exports = {
     let downloadConfirmBlock_isDisplayed = await downloadConfirmBlock.isDisplayed()
 
     expect(downloadConfirmBlock_isDisplayed).toBeTruthy()
-    const downloadConfirmBlockButton = await downloadConfirmBlock.findElement(By.tagName('button'))
-
-    await downloadConfirmBlockButton.click()
-
-    downloadConfirmBlock_isDisplayed = await downloadConfirmBlock.isDisplayed()
-    expect(downloadConfirmBlock_isDisplayed).toBeFalsy()
-
-    await wordListLangBlockDownload.click()
-
-    
-    const checkboxWithFiltering = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-with-filters.alpheios-checkbox-block'))
+ 
+    const checkboxWithFiltering = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-with-filters.alpheios-checkbox-block label'))
     await checkboxWithFiltering.click()
 
-    const checkboxWithFiltering_input = await checkboxWithFiltering.findElement(By.tagName('input'))
+    const checkboxWithFiltering_input = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-with-filters.alpheios-checkbox-block input'))
     const checkboxWithFiltering_input_isSelected = await checkboxWithFiltering_input.isSelected()
 
     expect(checkboxWithFiltering_input_isSelected).toBeTruthy()
 
-    const checkboxFlashcard = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-for-flashcards.alpheios-checkbox-block'))
+    const checkboxFlashcard = await downloadConfirmBlock.findElement(By.css('.alpheios-wordlist-download-for-flashcards.alpheios-checkbox-block label'))
     await checkboxFlashcard.click()
 
-    const checkboxFlashcard_input = await checkboxFlashcard.findElement(By.tagName('input'))
+    const checkboxFlashcard_input = await downloadConfirmBlock.findElement(By.tagName('.alpheios-wordlist-download-for-flashcards.alpheios-checkbox-block input'))
     const checkboxFlashcard_input_isSelected = await checkboxFlashcard_input.isSelected()
 
     expect(checkboxFlashcard_input_isSelected).toBeTruthy()
+
+    const downloadConfirmBlockButton = await downloadConfirmBlock.findElement(By.className('alpheios-notification-area__close-btn'))
+    await downloadConfirmBlockButton.click()
+
+    downloadConfirmBlock_isDisplayed = await downloadConfirmBlock.isDisplayed()
+    expect(downloadConfirmBlock_isDisplayed).toBeFalsy()
+  },
+
+  async clearWordlists (driver) {
+    await this.openWordlistTab(driver)
+
+    const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
+    const wordlistLangBlocks = await wordlistTab.findElements(By.className('alpheios-wordlist-language'))
+
+    let wordlistLangBlocksIds = []
+
+    for (let i = 0; i < wordlistLangBlocks.length; i++) {
+      const id = await wordlistLangBlocks[i].getAttribute('id')
+      wordlistLangBlocksIds.push(id)
+    }
+
+    for (let i = 0; i < wordlistLangBlocksIds.length; i++) {
+      const wordlistLangBlock = await wordlistTab.findElement(By.id(wordlistLangBlocksIds[i]))
+
+      const deleteAllButton = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-commands__item-remove-all'))
+      await deleteAllButton.click()
+
+      const confirmationBlock = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-delete-all-confirmation'))
+      const confirmationBlockDeleteButton = await confirmationBlock.findElement(By.css('.alpheios-wordlist-delete-all-confirmation__buttons button'))
+
+      await confirmationBlockDeleteButton.click()
+    }
+  },
+
+  async clearWordlistsMobile (driver) {
+    await this.openWordlistTabMobile(driver)
+
+    const wordlistTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__wordlist'))
+    const wordlistLangBlocks = await wordlistTab.findElements(By.className('alpheios-wordlist-language'))
+
+    let wordlistLangBlocksIds = []
+
+    for (let i = 0; i < wordlistLangBlocks.length; i++) {
+      const id = await wordlistLangBlocks[i].getAttribute('id')
+      wordlistLangBlocksIds.push(id)
+    }
+
+    for (let i = 0; i < wordlistLangBlocksIds.length; i++) {
+      const wordlistLangBlock = await wordlistTab.findElement(By.id(wordlistLangBlocksIds[i]))
+
+      const deleteAllButton = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-commands__item-remove-all'))
+      await deleteAllButton.click()
+
+      const confirmationBlock = await wordlistLangBlock.findElement(By.className('alpheios-wordlist-delete-all-confirmation'))
+      const confirmationBlockDeleteButton = await confirmationBlock.findElement(By.css('.alpheios-wordlist-delete-all-confirmation__buttons button'))
+
+      await confirmationBlockDeleteButton.click()
+    }
   },
 
   async openUserTab (driver) {
@@ -839,7 +899,51 @@ module.exports = {
     await userIconToolbar.click()
   },
 
+  async openUserTabMobile (driver) {
+    await this.checkAndClosePanelMobile(driver)
+    await this.checkAndOpenActionPanel(driver)
+
+    const toolbarBtnUser = await driver.wait(until.elementLocated(By.id('alpheios-action-panel-user')), timeoutG * 4)
+    await toolbarBtnUser.click()
+  },
+
   async loginTestUser (driver) {
-    await openUserTab(driver)
+    await this.openUserTab(driver)
+
+    const userPanelTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__user'))
+    const userPanelTab_loginButton = await userPanelTab.findElement(By.id('alpheios-user-auth__login-button'))
+
+    await userPanelTab_loginButton.click()
+
+    const userPanelLoggedInData = await userPanelTab.findElement(By.className('alpheios-user-auth__user-info-box'))
+
+    const userPanelLoggedInData_isDisplayed = userPanelLoggedInData.isDisplayed()
+
+    expect(userPanelLoggedInData_isDisplayed).toBeTruthy()
+
+    const userPanelLoggedInData_userName = await userPanelLoggedInData.findElement(By.className('alpheios-user-auth__user-info-item-value'))
+    const userPanelLoggedInData_userName_txt = await userPanelLoggedInData_userName.getText()
+
+    expect(userPanelLoggedInData_userName_txt.trim()).toEqual('testuser')
+  },
+
+  async loginTestUserMobile (driver) {
+    await this.openUserTabMobile(driver)
+
+    const userPanelTab = await driver.findElement(By.css('.alpheios-panel__tab-panel.alpheios-panel__tab__user'))
+    const userPanelTab_loginButton = await userPanelTab.findElement(By.id('alpheios-user-auth__login-button'))
+
+    await userPanelTab_loginButton.click()
+
+    const userPanelLoggedInData = await userPanelTab.findElement(By.className('alpheios-user-auth__user-info-box'))
+
+    const userPanelLoggedInData_isDisplayed = userPanelLoggedInData.isDisplayed()
+
+    expect(userPanelLoggedInData_isDisplayed).toBeTruthy()
+
+    const userPanelLoggedInData_userName = await userPanelLoggedInData.findElement(By.className('alpheios-user-auth__user-info-item-value'))
+    const userPanelLoggedInData_userName_txt = await userPanelLoggedInData_userName.getText()
+
+    expect(userPanelLoggedInData_userName_txt.trim()).toEqual('testuser')
   }
 }

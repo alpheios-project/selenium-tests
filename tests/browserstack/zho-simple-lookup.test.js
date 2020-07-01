@@ -29,8 +29,6 @@ describe('zho-simple-lookup.test.js', () => {
     }, 50000000)
   })
 
-  // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
-
   versionsMobile.forEach(version => {
     it(`should execute no result (zho) lookup - ${version.name}`, async () => {
       const capabilities = Object.assign(version, { 

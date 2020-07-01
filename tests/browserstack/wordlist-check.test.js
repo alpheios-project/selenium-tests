@@ -22,12 +22,12 @@ describe('latin-simple-lookup.test.js', () => {
           capabilities: Object.assign(version, { buildName: 'Wordlist check - desktop' } ),
           url: testUrl,
           wordlistData: config.wordlistData,
-          checkInflections: true
+          loginFirst: false
         })
         
       }, 5000000)
     })
-  
+
     versionsMobile.forEach(version => {
       it(`should execute wordlist workflow steps - ${version.name}`, async () => {
         const capabilities = Object.assign(version, { 
@@ -37,15 +37,15 @@ describe('latin-simple-lookup.test.js', () => {
         'browserstack.local': false
       } )
   
-      await alph_tests.wordlistCheckTest({
+      await alph_tests.wordlistCheckTestMobile({
         capabilities,
         url: testUrl,
         wordlistData: config.wordlistData,
-        checkInflections: true
+        loginFirst: false
       })
   
       }, 5000000)
     })
-  
+
   })
   

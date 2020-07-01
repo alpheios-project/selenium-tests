@@ -16,13 +16,8 @@ describe('latin-simple-lookup.test.js', () => {
   beforeEach(() => {})
   afterEach(() => {})
 
-  // console.info('versionsMobile - ', versionsMobile.map(ver => `${ver.device_browser} ${ver.device} ${ver.os} ${ver.os_version}` ))
-
   versionsDesktop.forEach(version => {
-    it(`should execute simple (latin) lookup - ${version.name}`, async () => {
-      // console.info('version - ', `${version.browser} ${version.browser_version} ${version.os} ${version.os_version}`)
-      // console.info('testUrl - ', testUrl)
-      
+    it(`should execute simple (latin) lookup - ${version.name}`, async () => {     
       await alph_tests.simpleLookupTest({
         capabilities: Object.assign(version, { buildName: 'Simple (latin) lookup - desktop' } ),
         url: testUrl,

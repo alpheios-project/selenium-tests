@@ -306,6 +306,7 @@ module.exports = {
 
       if (params.loginFirst) {
         await alph.loginTestUser(driver)
+        await alph.clearWordlists(driver)
       }
 
       for (let i = 0; i<params.wordlistData.words.length; i++) {
@@ -313,10 +314,45 @@ module.exports = {
         await alph.lookupWord(driver, lookupData.targetWord, lookupData.lang, i===0)
       }
 
-      await alph.checkWordlist(driver, params.wordlistData.words)
+      await alph.checkWordlist(driver, params.wordlistData.words, 'desktop')
 
       const langs = params.wordlistData.words.map(word => word.langCode).filter((item, index, arr) => arr.indexOf(item) === index)
       await alph.downloadWordlist(driver, langs[0])
+    }
+    await driver.quit()
+  },
+
+  /**
+   * @param {Object} params contains test parameters
+   * For each item in the params.wordlistData list, executes a lookup using the
+   * lookup box to save to wordlist
+   * on mobile platforms
+   */
+  async wordlistCheckTestMobile (params) {
+    const driver = await alph.defineDriver(params.capabilities, config.auth, params.capabilities.timeout, 'mobile')
+    const loaded = await alph.firstPageLoad(driver, params.url)
+
+    expect(loaded).toBeTruthy()
+    if (loaded && params.wordlistData && params.wordlistData.words) {
+
+      let needActivation = true
+      if (params.loginFirst) {
+        await alph.loginTestUserMobile(driver)
+        await alph.clearWordlistsMobile(driver)
+
+        needActivation = false
+      }
+
+      for (let i = 0; i<params.wordlistData.words.length; i++) {
+        let lookupData = params.wordlistData.words[i]
+        await alph.lookupWordMobile(driver, lookupData.targetWord, lookupData.lang, needActivation && i === 0)
+      }
+
+      await alph.checkWordlist(driver, params.wordlistData.words, 'mobile')
+
+      const langs = params.wordlistData.words.map(word => word.langCode).filter((item, index, arr) => arr.indexOf(item) === index)
+      await alph.downloadWordlist(driver, langs[0])
+
     }
     await driver.quit()
   }
