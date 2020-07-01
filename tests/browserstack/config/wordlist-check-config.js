@@ -22,7 +22,7 @@ module.exports = {
     mobile: {
       device: ['iPhone 11 Pro Max', 'Samsung Galaxy S20 Plus' ],
       // device: ['iPhone 11 Pro Max'],
-      device_browser: ['chrome'],
+      // device_browser: ['chrome'],
       device_like: false,
       realMobile: true,
       'browserstack.console': 'errors'

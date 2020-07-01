@@ -29,7 +29,7 @@ describe('latin-simple-lookup.test.js', () => {
     })
 
     versionsMobile.forEach(version => {
-      it.skip(`should execute wordlist workflow steps - ${version.name}`, async () => {
+      it(`should execute wordlist workflow steps - ${version.name}`, async () => {
         const capabilities = Object.assign(version, { 
         buildName: 'Wordlist check - mobile',
         realMobile: true,
