@@ -14,7 +14,7 @@
   "scripts": {
     "test": "npm run test-check-initial-actions",
     "test-browserstack": "jest tests/browserstack/* --env=node --maxConcurrency=1",
-    "test-browserstack-qa": "cross-env BRANCH='qa' jest tests/browserstack/* --env=node --maxConcurrency=1",
+    "test-browserstack-qa": "cross-env BRANCH='qa' jest tests/browserstack/* --env=node --maxConcurrency=1 --detectOpenHandles",
     "test-latin-simple-lookup": "jest tests/browserstack/latin-simple-lookup.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-greek-simple-lookup": "jest tests/browserstack/greek-simple-lookup.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-ara-simple-lookup": "jest tests/browserstack/ara-simple-lookup.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
@@ -27,7 +27,6 @@
     "test-click-lookup-treebank": "jest tests/browserstack/click-lookup-treebank.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-check-initial-actions": "jest tests/browserstack/check-initial-actions.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
     "test-wordlist-check": "jest tests/browserstack/wordlist-check.test.js --env=node --maxConcurrency=2 --detectOpenHandles",
-
     "test-manual": "jest tests/manual-tests/* --env=node",
     "update-desktop-browsers": "node src/update-desktop-browser-list.js",
     "update-mobile-browsers": "node src/update-mobile-browsers-list.js"
