@@ -14,7 +14,10 @@ module.exports = {
   },
 
   versions (env, type = 'desktop') {
-    if (!env) {
+    if (process.env.BRANCH === 'qa') {
+      const qaEnv = require('@tests/browserstack/config/qa-config.js')
+      env = qaEnv.env[type]
+    } else if (!env) {
       env = config.env[type]
     }
 
@@ -61,9 +64,9 @@ module.exports = {
       })
 
       const timeout = envItem.timeout ? envItem.timeout : config.timeout
-      localVersions.forEach(version => { 
-        version.timeout = timeout 
-        version['browserstack.console'] = envItem['browserstack.console'] 
+      localVersions.forEach(version => {
+        version.timeout = timeout
+        version['browserstack.console'] = envItem['browserstack.console']
       })
 
       finalVersions = finalVersions.concat(localVersions)
